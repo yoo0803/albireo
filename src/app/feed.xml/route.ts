@@ -1,7 +1,7 @@
 import { listPublicArticles } from "@/lib/data/public";
 import { SITE, absUrl } from "@/lib/seo";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic"; // 요청마다 새로 (Cloudflare 정적 캐시는 읽기 전용)
 
 const esc = (s: string) => s.replace(/[<>&'"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;" })[c]!);
 

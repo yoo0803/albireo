@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { listMemberHandles, listPublicArticles, listPublicSeries } from "@/lib/data/public";
 import { absUrl } from "@/lib/seo";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic"; // 요청마다 새로 (Cloudflare 정적 캐시는 읽기 전용)
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [articles, handles, series] = await Promise.all([

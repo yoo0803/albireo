@@ -1,8 +1,6 @@
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
 
-export const runtime = "edge";
-
 const COLOR: Record<string, string> = { cs: "#6a95dd", chem: "#93aa8c", media: "#c97a63", policy: "#d9a441" };
 const LABEL: Record<string, string> = { cs: "COMPUTING", chem: "CHEMISTRY", media: "MEDIA", policy: "POLICY" };
 

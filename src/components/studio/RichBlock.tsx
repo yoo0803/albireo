@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { CsvChart } from "@/components/canvas/CsvChart";
+import { CsvChart } from "@/components/canvas/CsvChartLazy";
 import { DiagramView } from "@/components/article/DiagramView";
 import { parseChartBlock } from "@/lib/text/blocks";
 import { useT } from "@/lib/i18n/client";

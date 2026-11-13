@@ -1,0 +1,20 @@
+// Cloudflare Workers 배포 설정 (OpenNext)
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "albireo",
+  // 매일 깨우기 예약을 위해 OpenNext 워커를 감싼 진입점
+  "main": "cf-worker.ts",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    // 자기 참조 (OpenNext 캐시) · 이름은 워커 이름과 같아야 함
+    { "binding": "WORKER_SELF_REFERENCE", "service": "albireo" }
+  ],
+  // Supabase 무료 플랜 7일 미사용 정지 방지: 매일 시드니 새벽 (UTC 18:17)
+  "triggers": { "crons": ["17 18 * * *"] },
+  "observability": { "enabled": true }
+}

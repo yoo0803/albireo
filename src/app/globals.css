@@ -1778,3 +1778,6 @@ body:has(.canvas-stage) .site-footer { display: none; }
 .react-dock :is(.rx-like, .rx-poop) { height: 36px; background: rgb(var(--card-rgb) / 0.85); backdrop-filter: blur(10px); border-color: var(--line-strong); }
 .react-dock .rx-like { padding: 0 12px 0 9px; gap: 7px; }
 .react-dock .rx-poop { width: 36px; }
+
+/* 차트 불러오는 동안 자리 */
+.chart-loading { min-height: 320px; border: 1px dashed var(--line); border-radius: 6px; background: rgb(var(--ink-rgb) / 0.02); }

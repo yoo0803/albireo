@@ -25,7 +25,7 @@ export async function POST(req: Request) {
   // 시드니 날짜 기준 하루 고유 방문자
   const day = new Intl.DateTimeFormat("en-CA", { timeZone: "Australia/Sydney" }).format(new Date());
   const visitor = createHash("sha256").update(`${v}|${day}|${serverEnv().serviceKey.slice(-16)}`).digest("hex");
-  const country = (req.headers.get("x-vercel-ip-country") ?? "").slice(0, 2).toUpperCase() || null;
+  const country = (req.headers.get("cf-ipcountry") ?? req.headers.get("x-vercel-ip-country") ?? "").slice(0, 2).toUpperCase().replace(/^(XX|T1)$/, "") || null;
 
   await db.from("site_visits").insert({
     path,

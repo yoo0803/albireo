@@ -3,7 +3,7 @@ import { useState } from "react";
 import { fetchReference } from "@/lib/cite/client";
 import { normalizeDoi } from "@/lib/cite/apa";
 import { useLang, useT } from "@/lib/i18n/client";
-import { CsvChart } from "@/components/canvas/CsvChart";
+import { CsvChart } from "@/components/canvas/CsvChartLazy";
 import { DiagramView } from "@/components/article/DiagramView";
 import type { ChartKindX } from "@/lib/text/blocks";
 

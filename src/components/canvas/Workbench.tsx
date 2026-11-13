@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Papa from "papaparse";
-import { CsvChart } from "./CsvChart";
+import { CsvChart } from "./CsvChartLazy";
 import { Board } from "./board/Board";
 import { EMPTY_DOC, toDoc, uid, type CanvasDoc } from "./types";
 import { saveCanvas, setCanvasLock } from "@/app/studio/actions";

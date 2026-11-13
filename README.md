@@ -12,7 +12,7 @@ A peer-reviewed student webzine. Four members write in a private studio; an arti
 |---|---|
 | App | Next.js 15 (App Router) · React 19 · TypeScript · Node 24 |
 | DB · Auth | Supabase (PostgreSQL, RLS, Realtime, Storage); email + password, magic link for first sign-in / reset |
-| Hosting | Vercel |
+| Hosting | Cloudflare Workers (OpenNext) |
 | Mail | Nodemailer over Gmail SMTP |
 | Monitoring | Sentry · Google Analytics 4 · in-house visit log |
 | Test | Vitest · `supabase/tests` (policy checks) |
@@ -108,9 +108,14 @@ Sign in once with an email link, replace the handles in `supabase/seed.sql` and 
 
 ## Deploy
 
-1. Import the repo on Vercel (`vercel.json`: Next.js preset, `syd1` region next to Supabase) and add the env vars
-2. Add `https://<domain>/auth/callback` to Supabase Auth redirect URLs and set the Site URL
-3. Submit `/sitemap.xml` to Search Console
+Cloudflare Workers via [OpenNext](https://opennext.js.org/cloudflare) (`wrangler.jsonc`, `open-next.config.ts`, `cf-worker.ts`).
+
+1. Cloudflare → Workers & Pages → Create → Import a repository. Build command `npx opennextjs-cloudflare build`, deploy command `npx opennextjs-cloudflare deploy`
+2. Add the env vars twice: `NEXT_PUBLIC_*` as **build** variables (they are inlined into the browser bundle) and everything as Worker **runtime** variables/secrets
+3. Add `https://<domain>/**` to Supabase Auth redirect URLs and set the Site URL
+4. A daily cron (`wrangler.jsonc` → `cf-worker.ts`) pings Supabase so the free project isn't paused
+5. Local check: `npm run preview` (Workers runtime) · `npm run deploy` deploys from your machine
+6. Submit `/sitemap.xml` to Search Console
 
 ## Security
 

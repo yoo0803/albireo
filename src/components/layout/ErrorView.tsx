@@ -1,12 +1,12 @@
 "use client";
-import * as Sentry from "@sentry/nextjs";
 import { useEffect } from "react";
 import { useT } from "@/lib/i18n/client";
 
-// 라우트 에러 화면 (Sentry 보고)
+// 라우트 에러 화면 (브라우저 오류 보고)
 export function ErrorView({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   const t = useT();
-  useEffect(() => { Sentry.captureException(error); }, [error]);
+  // 브라우저 전역 오류로 보고 → Sentry 브라우저 SDK가 수집 (서버 번들에 Sentry 안 들어가게)
+  useEffect(() => { reportError(error); }, [error]);
   return (
     <section className="wrap" style={{ minHeight: "60dvh", display: "grid", placeContent: "center", gap: 16, textAlign: "center" }}>
       <p className="label faint">Error{error.digest ? ` · ${error.digest}` : ""}</p>

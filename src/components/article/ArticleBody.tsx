@@ -2,7 +2,7 @@ import { Fragment, type ReactNode } from "react";
 import { footnoteOrder, parseInline, type Block, type Inline } from "@/lib/text/markdown";
 import type { Reference } from "@/lib/cite/apa";
 import type { Sentence } from "@/lib/text/sentences";
-import { CsvChart } from "@/components/canvas/CsvChart";
+import { CsvChart } from "@/components/canvas/CsvChartLazy";
 import { DiagramView } from "./DiagramView";
 import { parseChartBlock, parseDiagram } from "@/lib/text/blocks";
 

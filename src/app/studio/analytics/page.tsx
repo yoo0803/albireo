@@ -53,7 +53,7 @@ export default async function Analytics({ searchParams }: { searchParams: Promis
     return (
       <div className="stack" style={{ ["--gap" as string]: "18px" }}>
         <StudioHead title={t("통계", "Analytics")} note={t("방문자 · 유입 경로 · 구독자", "Visitors · referrers · subscribers")} />
-        <p className="dim">{t("Vercel 환경 변수 SUPABASE_SERVICE_ROLE_KEY 를 추가하면 통계가 켜져요.", "Add SUPABASE_SERVICE_ROLE_KEY in Vercel to turn analytics on.")}</p>
+        <p className="dim">{t("Cloudflare 워커 환경 변수에 SUPABASE_SERVICE_ROLE_KEY 를 추가하면 통계가 켜져요.", "Add SUPABASE_SERVICE_ROLE_KEY to the Cloudflare Worker variables to turn analytics on.")}</p>
       </div>
     );
   }

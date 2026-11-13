@@ -6,7 +6,14 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // ascii-magic-art: 순수 ESM 패키지
   transpilePackages: ["ascii-magic-art"],
+  // 브라우저 전용 라이브러리는 서버 번들에서 제외 (Cloudflare 워커 용량)
+  webpack(config, { isServer }) {
+    if (isServer) config.resolve.alias = { ...config.resolve.alias, "tesseract.js": false };
+    return config;
+  },
   images: {
+    // next/image 미사용 · Cloudflare 이미지 변환 없이
+    unoptimized: true,
     remotePatterns: [{ protocol: "https", hostname: "*.supabase.co" }],
   },
   async headers() {
@@ -35,4 +42,6 @@ export default withSentryConfig(nextConfig, {
   silent: !process.env.CI,
   widenClientFileUpload: true,
   tunnelRoute: "/monitoring",
+  // 서버 쪽 자동 계측 끔: Cloudflare 무료 플랜 용량 (서버 오류는 Cloudflare 로그로)
+  webpack: { autoInstrumentServerFunctions: false, autoInstrumentMiddleware: false, autoInstrumentAppDirectory: false },
 });
