@@ -2,8 +2,8 @@
 
 A peer-reviewed student webzine. Four members write in a private studio; an article is certified once two members approve it, and authors can publish before or after review (uncertified pieces are marked).
 
-- Live: https://albireo-orbit.vercel.app
-- Team: Yeji C., L, S, H
+- Live: https://albireo.ychu.workers.dev
+- Team: Yeji C., Yeonwoo L., Seokhwa H., H
 - Credits: [`CREDITS.md`](./CREDITS.md)
 
 ## Stack
