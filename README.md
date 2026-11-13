@@ -2,42 +2,45 @@
 
 A peer-reviewed student webzine. Four members write in a private studio; an article is certified once two members approve it, and authors can publish before or after review (uncertified pieces are marked).
 
-- Live: https://albireo-orbit.vercel.app
-- Team: Yeji C., L, S, H
+- Live: https://albireo.ychu.workers.dev
+- Team: Yeji C., Yeonwoo L., Seokhwa H., H
+- Contact: [albireo.dev.00@gmail.com](mailto:albireo.dev.00@gmail.com)
 - Credits: [`CREDITS.md`](./CREDITS.md)
 
 ## Stack
 
 | | |
 |---|---|
-| App | Next.js 15 (App Router) · React 19 · TypeScript · Node 24 |
+| App | Next.js 15.5 (App Router) · React 19 · TypeScript · Node 24 |
 | DB · Auth | Supabase (PostgreSQL, RLS, Realtime, Storage); email + password, magic link for first sign-in / reset |
 | Hosting | Cloudflare Workers (OpenNext) |
 | Mail | Nodemailer over Gmail SMTP |
-| Monitoring | Sentry · Google Analytics 4 · in-house visit log |
+| Monitoring | Sentry (browser) · Google Analytics 4 · in-house visit log |
 | Test | Vitest · `supabase/tests` (policy checks) |
 
 ## Features
 
 | Feature | Implementation |
 |---|---|
-| Home · webzine | Original orbit hero at the centre of an infinite pannable canvas: field islands, inertia, pinch/wheel zoom, keyboard nav, list fallback |
+| Home · webzine | Original orbit hero at the centre of an infinite pannable canvas: field islands (members always top-right), inertia, pinch/wheel zoom, keyboard nav, list fallback; random-article button; rocket like / poop dislike |
 | About | The Albireo story (KO/EN) with a dithered telescope view built from measured values: separation 35.3″, PA 54°, mag 3.1/5.1, Gaia distances, Aa–Ac inner orbit; drag to see depth, hold to magnify A |
 | Sentence annotations | Hashed sentence ids + Range offsets, CSS Highlight API, Realtime sync |
 | Debate | Threaded replies (`parent_id` tree), realtime, soft delete |
 | Peer review | Approval requires all 6 checklist items; 2 approvals certify via DB trigger; body edits invalidate reviews |
 | Writing | Visual or Markdown editor, footnotes `[^n]`, DOI → linked title, APA 7 reference list, optional English version |
 | Knowledge canvas | Board with cards · shapes · links, cards nested in cards (collapse), folders, mind-map and time-tree layouts, pen ink (palette, stabiliser), handwriting → text, rectangle/lasso selection → PNG or straight into a manuscript; pins to fix and jump back; auto / centre arrange; first-visit tour; private lock per canvas; CSV → charts; moodboard |
-| Links | `[[term]]` bidirectional links between manuscripts (backlinks) |
+| Links | `[[term]]` concept links between manuscripts |
+| Series | Serials and periodicals: episode / issue numbering, series shelf and pages, prev/next links, red thread joining episodes on the webzine canvas |
 | Publishing | Draft / publish split; publish after review or before (unstamped); ISR, JSON-LD · sitemap · RSS · OG images |
 | Engagement | Views (per visitor/day), likes, latest · oldest · popular sorting, share links |
 | Subscriptions | Double opt-in, welcome letter on confirm, one email per new article, one-click unsubscribe (RFC 8058) |
 | Analytics | Cookie-free visit log (daily hashed visitor id, Do Not Track respected) → admin-only studio dashboard: visitors, pages, referrers, countries, devices, subscribers |
 | Members | 2×2 member grid + mind-map canvas linking each member to their articles |
-| Member pages | Self-managed profiles, up to 3 pinned peer-reviewed highlights, contribution stats |
+| Member pages | Self-managed profiles, up to 3 pinned peer-reviewed highlights, contribution stats; handle set from the name (`first-lastinitial`, e.g. `yeji-c`) and not editable |
+| Shared sign-in | Several email accounts can use one member profile; each new account asks to link and the profile approves it in Settings |
 | Trash | Soft delete with confirm, restore, author-only permanent delete |
 | Language | KO / EN interface toggle (cookie); clock in sidereal time, Seoul or Sydney |
-| Sign-in | Email + password straight to the studio; members set their own password in Settings |
+| Sign-in | Email + password straight to the studio; members set their own password and sign out in Settings |
 | Typography | Per-piece body font (16 OFL fonts), size, line spacing, indent, justify; personal defaults |
 | Layout | Desktop layout from 600 px (foldables unfolded), mobile below |
 | Thumbnails | Upload or 8 generated templates × 6 tones (auto-picked when unset) |
@@ -64,17 +67,20 @@ supabase/
                 015 trash auto-purge after 30 days
                 016 admin flag · login-link throttle · member e-mail check · backlinks scope
                 017 canvas lock (owner-only when locked)
+                018 series
+                019 shared sign-in (profile_logins, me()) · automatic handles
   tests/        policies.check.mjs
   seed.sql      member promotion template
 src/
   app/(site)/   public: home · webzine · members · about · subscribe · login · credits
   app/studio/   private studio (actions.ts: server actions) · analytics (admin)
-  app/api/      og (Edge) · visit · unsubscribe · doi
-  components/   orbit · canvas-home · members · glyph · ascii · art · article · studio · canvas · motion · layout
+  app/api/      og · visit · unsubscribe · doi
+  components/   orbit · canvas-home · members · glyph · ascii · art · article · studio · canvas · reactions · promo · motion · layout
   lib/          board · supabase · text · cite · i18n · csv · seo · data · mail · visit
-  content/      team · about · review guidelines · fonts · demo data · credits
+  content/      team · about · fields · review guidelines · fonts · series · demo data · credits
 public/mail/    email header image
 .github/workflows/ci.yml   lint · types · tests · build · policy checks
+wrangler.jsonc · open-next.config.ts · cf-worker.ts   Cloudflare Workers
 ```
 
 ## Run
@@ -99,7 +105,7 @@ Sign in once with an email link, replace the handles in `supabase/seed.sql` and 
 | Key | |
 |---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` · `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Required (full mode) |
-| `NEXT_PUBLIC_SITE_URL` | Canonical · sitemap · OG · auth redirect |
+| `NEXT_PUBLIC_SITE_URL` | Canonical · sitemap · OG · auth redirect (`https://albireo.ychu.workers.dev`) |
 | `NEXT_PUBLIC_GA_ID` | Optional |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server only. Subscriptions + analytics |
 | `ADMIN_EMAIL` | Optional. Where membership requests are emailed (default `SMTP_USER`) |
@@ -123,7 +129,8 @@ Cloudflare Workers via [OpenNext](https://opennext.js.org/cloudflare) (`wrangler
 - Sign-in: password, or an email link for registered addresses only (no self sign-up). New members send a request from the sign-in page; the admin gets an email, signs in, and approves at `/join/review`
 - `is_member`, `is_admin`, `peer_reviewed`, `author_id` etc. are not client-writable (column privileges). The admin (Analytics, member approval) is `profiles.is_admin`, set in SQL
 - Publishing is gated by a DB trigger that checks review certification
-- Non-member profiles are private; default handles are unrelated to email
+- Non-member profiles are private; default handles are unrelated to email; member handles come from the display name (DB trigger)
+- A linked account acts as its profile only after that profile approves it; every policy resolves the profile through `me()`
 - Markdown is rendered to React elements by an in-house parser (raw HTML · `javascript:` blocked)
 - Login redirects accept internal paths only; password errors don't reveal whether an account exists
 - Subscribers and visit logs are server-only tables (service role); the stats RPC is not callable from the browser
@@ -136,6 +143,7 @@ Cloudflare Workers via [OpenNext](https://opennext.js.org/cloudflare) (`wrangler
 | | |
 |---|---|
 | `npm run dev` / `build` / `start` | Dev · build · start |
+| `npm run cf:build` / `preview` / `deploy` | Cloudflare build · local Workers preview · deploy |
 | `npm run typecheck` / `lint` / `test` | Types · lint · unit tests |
 | `npm run test:db` | Policy checks (requires `DATABASE_URL`, empty PostgreSQL) |
 | `npm run db:types` | Generate Supabase types |
