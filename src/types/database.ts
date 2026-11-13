@@ -17,6 +17,7 @@ export type Profile = {
   discipline: Discipline | null;
   role_title: string | null;
   bio: string | null;
+  contact_email?: string | null;
   avatar_url: string | null;
   links: Json;
   is_member: boolean;

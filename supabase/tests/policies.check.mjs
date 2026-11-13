@@ -451,6 +451,14 @@ check("profile owner can unlink", x.ok && x.r.rowCount === 1, x.e?.message);
 x = await as("second", "select public.me() m");
 check("unlinked account back to itself", x.ok && x.r.rows[0].m === sec);
 
+// ─── 연락 메일 ───
+x = await as("lee", "update profiles set contact_email = 'lee@uni.edu' where id=$1 returning contact_email", [ids.lee]);
+check("member sets contact email", x.ok && x.r.rows[0].contact_email === "lee@uni.edu", x.e?.message);
+x = await as("lee", "update profiles set contact_email = 'not-an-email' where id=$1", [ids.lee]);
+check("contact email format enforced", !x.ok);
+x = await as("anon", "select contact_email from profiles where id=$1", [ids.lee]);
+check("contact email public on member profile", x.ok && x.r.rows[0]?.contact_email === "lee@uni.edu", x.e?.message);
+
 await c.end();
 const fail = results.filter((r) => !r.ok).length;
 console.log(`\n${results.length - fail}/${results.length} passed`);

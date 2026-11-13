@@ -34,6 +34,11 @@ export default async function Settings() {
           <div className="field"><label htmlFor="n">{t("이름", "Display name")}</label><input id="n" name="display_name" className="input" defaultValue={profile!.display_name} maxLength={40} required /></div>
           <div className="field"><label htmlFor="r">{t("직함", "Role title")}</label><input id="r" name="role_title" className="input" defaultValue={profile!.role_title ?? ""} /></div>
           <div className="field"><label htmlFor="b">{t("소개", "Bio")}</label><textarea id="b" name="bio" className="textarea" defaultValue={profile!.bio ?? ""} maxLength={600} /></div>
+          <div className="field">
+            <label htmlFor="ce">{t("연락 메일 (선택)", "Contact email (optional)")}</label>
+            <input id="ce" name="contact_email" type="email" className="input" defaultValue={profile!.contact_email ?? ""} maxLength={120} placeholder="name@example.com" />
+            <span className="faint" style={{ fontSize: "0.8rem" }}>{t("적으면 공개 프로필에 표시됩니다. 비워두면 표시하지 않습니다.", "Shown on your public profile. Leave empty to hide.")}</span>
+          </div>
           <SubmitButton pending={t("저장 중…", "Saving…")} className="btn btn-gold btn-start">{t("프로필 저장", "Save profile")}</SubmitButton>
         </form>
       </section>
@@ -70,7 +75,7 @@ export default async function Settings() {
 
       <section className="panel">
         <div className="panel-head"><span className="mono">{t("로그인 계정", "Sign-in accounts")}</span></div>
-        <p className="panel-note">{t("다른 메일 계정도 이 프로필로 작업실에 들어올 수 있습니다. 그 계정으로 로그인해 연결을 요청하면 여기서 승인합니다.", "Other email accounts can use this profile too. Sign in with that account and request a link, then approve it here.")}</p>
+        <p className="panel-note">{t("다른 메일 계정도 이 프로필로 작업실에 들어올 수 있습니다. 아래에서 바로 추가하거나, 그 계정으로 로그인해 보낸 연결 요청을 여기서 승인합니다.", "Other email accounts can use this profile too. Add one below, or approve a link request sent from that account.")}</p>
         <LoginAccounts me={user?.email ?? "—"} owner={owner} rows={logins ?? []} />
       </section>
 

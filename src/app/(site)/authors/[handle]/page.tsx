@@ -65,6 +65,7 @@ export default async function AuthorPage({ params }: Params) {
           <h1 className="display" style={{ fontSize: "clamp(3rem, 9vw, 7rem)" }}><ScrambleText text={p.byline.name} trigger="mount" /></h1>
           <p className="serif" style={{ fontSize: "1.3rem" }}>{p.byline.role}</p>
           {p.bio && <p className="dim" style={{ maxWidth: "36em" }}>{p.bio}</p>}
+          {p.contact && <a href={`mailto:${p.contact}`} className="profile-contact">{t("연락", "Contact")}: {p.contact}</a>}
           <div><ShareButton url={absUrl(`/authors/${p.byline.handle}`)} title={`${p.byline.name} · Albireo`} label={t("프로필 공유", "Share profile")} /></div>
         </div>
         {team && isPiece(team.piece) && (

@@ -8,10 +8,13 @@ import { fieldLabel } from "@/content/fields";
 import { TEAM } from "@/content/team";
 import { OrbitHero } from "@/components/orbit/OrbitHero";
 import { ReactDock } from "./ReactTile";
+import { cleanStyle } from "@/lib/text/style";
 import type { ArticleCard } from "@/lib/data/public";
 import type { Lang, T } from "@/lib/i18n";
 
-const MIN_ISLAND = 4;
+// 섬 방향 (화면 기준 도): 최신 글 분야가 왼쪽 위부터, 이어서 시계 반대 방향
+const SLOTS = [-135, 180, 135, 90, 45, 0, -90, -112, 158, 112, 68, 22];
+const rad = (d: number) => (d * Math.PI) / 180;
 const TAGS = (star: string) => ["Peer-Reviewed", "β Cygni", "RA 19h30m", "DEC +27°57′", "Webzine", star, "Albireo"];
 // 커버 크기: 시드별 150~230
 export const coverSize = (seed: string) => {
@@ -27,22 +30,21 @@ export function CanvasHome({ articles, lang, t }: { articles: ArticleCard[]; lan
   const r = rand("albireo-home");
   const tilt = () => Math.round((r() - 0.5) * 60) / 10;
 
-  // 분야별 섬
+  // 분야별 섬: 글은 한 번씩만 · 최신 글 순서대로 분야 정렬 (articles 는 최신순)
   const byField = new Map<string, ArticleCard[]>();
   articles.forEach((a) => byField.set(a.discipline, [...(byField.get(a.discipline) ?? []), a]));
-  const groups: Group[] = [...byField].map(([f, list]) => {
-    const n = Math.max(MIN_ISLAND, list.length);
-    const items = Array.from({ length: n }, (_, k) => {
-      const a = list[k % list.length];
+  const groups: Group[] = [...byField].map(([f, list], gi) => {
+    const items = list.map((a, k) => {
       const seed = `${a.slug}-${k}`;
       const id = `c-${f}-${k}`;
-      nodes[id] = <CoverTile a={a} lang={lang} seed={seed} tilt={tilt()} />;
+      nodes[id] = <CoverTile a={a} lang={lang} tilt={tilt()} />;
       return { id, ...coverSize(seed) };
     });
     const label = labelBox(`l-${f}`, fieldLabel(f));
     nodes[label.id] = <IslandLabel text={fieldLabel(f)} />;
-    return { id: f, label, items };
+    return { id: f, label, items, angle: rad(SLOTS[gi % SLOTS.length]) };
   });
+  const nextSlot = rad(SLOTS[groups.length % SLOTS.length]);
 
   // 사람들
   const people = TEAM.map((m) => {
@@ -58,12 +60,12 @@ export function CanvasHome({ articles, lang, t }: { articles: ArticleCard[]; lan
   // 별: 좌표 · 세로쓰기
   nodes["w-coord"] = <WordTile variant="label" text="β Cygni / RA 19h30m43s / DEC +27°57′35″" />;
   nodes["w-ko"] = <WordTile variant="ko" text={t("천상열차", "Star chart")} />;
-  groups.push({ id: "sky", items: [{ id: "w-ko", w: 70, h: 230 }, { id: "w-coord", w: 300, h: 44 }] });
+  groups.push({ id: "sky", items: [{ id: "w-ko", w: 70, h: 230 }, { id: "w-coord", w: 300, h: 44 }], angle: nextSlot });
 
   const hero = (
     <OrbitHero
       embedded
-      items={articles.slice(0, 8).map((a) => ({ slug: a.slug, title: lang === "en" && a.title_en ? a.title_en : a.title, discipline: a.discipline, author: a.author.name }))}
+      items={articles.slice(0, 8).map((a) => ({ slug: a.slug, title: lang === "en" && a.title_en ? a.title_en : a.title, discipline: a.discipline, author: a.author.name, cover: cleanStyle(a.style).cover, coverUrl: a.cover_url }))}
       crew={TEAM.map((m) => ({ handle: m.handle, name: m.name, discipline: m.discipline }))}
       slugs={articles.map((a) => a.slug)}
       tags={TAGS(t("천상열차", "Star chart"))}

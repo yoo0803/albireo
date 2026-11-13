@@ -149,6 +149,7 @@ export const getPublicArticle = cache(async (slug: string): Promise<ArticleFull 
 export type AuthorPage = {
   byline: Byline;
   bio: string | null;
+  contact?: string | null; // 연락 메일 (선택)
   stats: { articles: number; coauthored: number; reviews: number; annotations: number; debate_comments: number };
   articles: ArticleCard[];
   coauthored: (ArticleCard & { contribution: string | null })[];
@@ -215,6 +216,7 @@ export const getAuthor = cache(async (handle: string): Promise<AuthorPage | null
   return {
     byline: { handle: p.handle, name: p.display_name, discipline: p.discipline, role: p.role_title || base?.role },
     bio: p.bio || base?.bio || null,
+    contact: p.contact_email ?? null,
     stats: stats?.[0] ?? { articles: 0, coauthored: 0, reviews: 0, annotations: 0, debate_comments: 0 },
     articles: (own ?? []).map(toCard),
     coauthored: (coRows ?? []).map((a) => ({ ...toCard(a), contribution: links?.find((l) => l.article_id === a.id)?.contribution ?? null })),

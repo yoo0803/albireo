@@ -2,7 +2,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { RandomArticle } from "./RandomArticle";
-import { Cover } from "@/components/art/Cover";
+import { CoverArt } from "@/components/art/CoverArt";
+import { fieldLabel } from "@/content/fields";
 import { AsciiPiece } from "@/components/ascii/AsciiPiece";
 import { ScrambleText } from "@/components/glyph/ScrambleText";
 import { openScrapbook } from "@/components/layout/ScrapMenu";
@@ -10,7 +11,7 @@ import type { Discipline } from "@/types/database";
 import { useT } from "@/lib/i18n/client";
 import { LangToggle } from "@/components/layout/LangToggle";
 
-type Item = { slug: string; title: string; discipline: Discipline; author: string };
+type Item = { slug: string; title: string; discipline: Discipline; author: string; cover?: { tpl?: string; tone?: string }; coverUrl?: string | null };
 type Crew = { handle: string; name: string; discipline: Discipline };
 type Props = { items: Item[]; crew: Crew[]; tags: string[]; embedded?: boolean; slugs?: string[] }; // embedded: 캔버스 안 (끌기는 캔버스가 담당)
 
@@ -224,7 +225,15 @@ export function OrbitHero({ items, crew, tags, embedded, slugs }: Props) {
             onBlur={() => hover(null)}
             draggable={false}
           >
-            <Cover seed={a.slug} d={a.discipline} className="orbit-cover" label={a.title} />
+            {/* 웹진 · 캔버스 타일과 같은 표지 */}
+            <span className="orbit-cover">
+              {a.coverUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={a.coverUrl} alt="" draggable={false} />
+              ) : (
+                <CoverArt tpl={a.cover?.tpl} tone={a.cover?.tone} field={a.discipline} title={a.title} kicker={fieldLabel(a.discipline)} seed={a.slug} />
+              )}
+            </span>
             <span className="orbit-meta">
               <span className="label">{String(i + 1).padStart(2, "0")} / {a.author}</span>
               <span className="orbit-name">{a.title}</span>

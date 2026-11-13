@@ -22,7 +22,7 @@ A peer-reviewed student webzine. Four members write in a private studio; an arti
 
 | Feature | Implementation |
 |---|---|
-| Home · webzine | Original orbit hero at the centre of an infinite pannable canvas: field islands (members always top-right), inertia, pinch/wheel zoom, keyboard nav, list fallback; random-article button; rocket like / poop dislike |
+| Home · webzine | Original orbit hero at the centre of an infinite pannable canvas: field islands (newest field top-left, members top-right, each piece once), inertia, pinch/wheel zoom, keyboard nav, list fallback; random-article button; rocket like / poop dislike |
 | About | The Albireo story (KO/EN) with a dithered telescope view built from measured values: separation 35.3″, PA 54°, mag 3.1/5.1, Gaia distances, Aa–Ac inner orbit; drag to see depth, hold to magnify A |
 | Sentence annotations | Hashed sentence ids + Range offsets, CSS Highlight API, Realtime sync |
 | Debate | Threaded replies (`parent_id` tree), realtime, soft delete |
@@ -36,8 +36,8 @@ A peer-reviewed student webzine. Four members write in a private studio; an arti
 | Subscriptions | Double opt-in, welcome letter on confirm, one email per new article, one-click unsubscribe (RFC 8058) |
 | Analytics | Cookie-free visit log (daily hashed visitor id, Do Not Track respected) → admin-only studio dashboard: visitors, pages, referrers, countries, devices, subscribers |
 | Members | 2×2 member grid + mind-map canvas linking each member to their articles |
-| Member pages | Self-managed profiles, up to 3 pinned peer-reviewed highlights, contribution stats; handle set from the name (`first-lastinitial`, e.g. `yeji-c`) and not editable |
-| Shared sign-in | Several email accounts can use one member profile; each new account asks to link and the profile approves it in Settings |
+| Member pages | Self-managed profiles, up to 3 pinned peer-reviewed highlights, contribution stats, optional contact email; handle set from the name (`first-lastinitial`, e.g. `yeji-c`) and not editable |
+| Shared sign-in | Several email accounts can use one member profile: add one directly in Settings, or approve a link request sent from that account |
 | Trash | Soft delete with confirm, restore, author-only permanent delete |
 | Language | KO / EN interface toggle (cookie); clock in sidereal time, Seoul or Sydney |
 | Sign-in | Email + password straight to the studio; members set their own password and sign out in Settings |
@@ -69,6 +69,7 @@ supabase/
                 017 canvas lock (owner-only when locked)
                 018 series
                 019 shared sign-in (profile_logins, me()) · automatic handles
+                020 profile contact email
   tests/        policies.check.mjs
   seed.sql      member promotion template
 src/

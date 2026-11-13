@@ -12,6 +12,8 @@ import { cleanField } from "@/content/fields";
 import { cleanPrefs, cleanStyle, type ArticleStyle } from "@/lib/text/style";
 import { getT } from "@/lib/i18n/server";
 import { env } from "@/lib/env";
+import { supabaseAdmin } from "@/lib/supabase/admin";
+import { findUserId } from "@/lib/join";
 import type { T } from "@/lib/i18n";
 
 const LIMIT = { title: 200, subtitle: 200, excerpt: 200, body: 200_000, tags: 12, tag: 40 };
@@ -331,11 +333,15 @@ export async function updateProfile(form: FormData): Promise<void> {
   const { sb, profile } = await member();
   const display_name = String(form.get("display_name") ?? "").trim().slice(0, 40);
   if (!display_name) return;
+  // 연락 메일: 형식 맞을 때만 (비우면 표시 안 함)
+  const rawContact = String(form.get("contact_email") ?? "").trim().slice(0, 120);
+  const contact = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(rawContact) ? rawContact : null;
   // 핸들은 이름에서 자동 (DB 트리거)
   const { data } = await sb.from("profiles").update({
     display_name,
     role_title: String(form.get("role_title") ?? "").trim().slice(0, 80) || null,
     bio: String(form.get("bio") ?? "").trim().slice(0, 600) || null,
+    contact_email: contact,
   }).eq("id", profile.id).select("handle").maybeSingle();
   revalidatePath("/studio", "layout");
   revalidatePath(`/authors/${profile.handle}`);
@@ -361,6 +367,39 @@ export async function requestLogin(form: FormData): Promise<void> {
   await sb.from("profile_logins").delete().eq("user_id", user.id).neq("status", "approved");
   await sb.from("profile_logins").insert({ user_id: user.id, profile_id: target, note });
   revalidatePath("/studio", "layout");
+}
+
+// 로그인한 멤버가 직접 계정 추가: 승인 절차 없이 바로 연결
+export async function addLogin(email: string): Promise<Result> {
+  const t = await getT();
+  const { profile } = await member();
+  const e = email.trim().toLowerCase();
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e) || e.length > 200) return { ok: false, error: t("이메일 형식 오류", "Invalid email") };
+  const db = supabaseAdmin();
+  if (!db) return { ok: false, error: t("서버 설정(SUPABASE_SERVICE_ROLE_KEY)이 필요합니다.", "Server key (SUPABASE_SERVICE_ROLE_KEY) required.") };
+  try {
+    let id = await findUserId(db, e);
+    if (!id) {
+      // 계정 생성 (비밀번호 없음 · 로그인 링크로 첫 로그인)
+      const { data, error } = await db.auth.admin.createUser({ email: e, email_confirm: true });
+      if (error || !data.user) throw error ?? new Error("create failed");
+      id = data.user.id;
+    }
+    if (id === profile.id) return { ok: false, error: t("지금 쓰는 기본 계정입니다.", "That’s this profile’s main account.") };
+    const { data: other } = await db.from("profiles").select("is_member").eq("id", id).maybeSingle();
+    if (other?.is_member) return { ok: false, error: t("다른 멤버의 기본 계정이라 연결할 수 없습니다.", "That email belongs to another member.") };
+    const { data: link } = await db.from("profile_logins").select("profile_id, status").eq("user_id", id).maybeSingle();
+    if (link?.status === "approved" && link.profile_id !== profile.id) return { ok: false, error: t("이미 다른 프로필에 연결된 계정입니다.", "Already linked to another profile.") };
+    const { error } = await db.from("profile_logins").upsert({
+      user_id: id, profile_id: profile.id, status: "approved", decided_at: new Date().toISOString(), decided_by: profile.id,
+    });
+    if (error) throw error;
+  } catch (err) {
+    console.error("add login", (err as Error)?.message);
+    return { ok: false, error: t("추가하지 못했습니다. 잠시 후 다시 시도해 주십시오.", "Couldn’t add it. Please try again.") };
+  }
+  revalidatePath("/studio/settings");
+  return { ok: true };
 }
 
 // 요청 취소 (요청자)
