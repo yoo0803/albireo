@@ -64,9 +64,9 @@ export function ConfirmButton({ label, ask, sub, ok, className = "btn btn-sm btn
 type Mode = "trash" | "restore" | "purge";
 
 const COPY = (t: T): Record<Mode, Omit<ButtonProps, "onConfirm" | "className">> => ({
-  trash: { label: "Delete", ask: t("삭제하시겠습니까?", "Delete this?"), sub: t("휴지통으로 이동", "Moves to Trash"), ok: t("삭제", "Delete") },
-  restore: { label: "Restore" },
-  purge: { label: "Delete forever", ask: t("영구 삭제하시겠습니까?", "Delete permanently?"), sub: t("복구 불가", "This cannot be undone"), ok: t("영구 삭제", "Delete forever") },
+  trash: { label: t("삭제", "Delete"), ask: t("삭제하시겠습니까?", "Delete this?"), sub: t("휴지통으로 이동", "Moves to Trash"), ok: t("삭제", "Delete") },
+  restore: { label: t("복원", "Restore") },
+  purge: { label: t("영구 삭제", "Delete forever"), ask: t("영구 삭제하시겠습니까?", "Delete permanently?"), sub: t("복구 불가", "This cannot be undone"), ok: t("영구 삭제", "Delete forever") },
 });
 
 const RUN = { trash: trashItem, restore: restoreItem, purge: purgeItem };

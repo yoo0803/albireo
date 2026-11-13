@@ -17,7 +17,7 @@ export default async function Confirm({ searchParams }: { searchParams: Promise<
       <FontLinks id="song-myung" />
       <div className="wrap sub-done">
         <div className="stack" style={{ ["--gap" as string]: "18px" }}>
-          <span className="label faint">Albireo · Letters</span>
+          <span className="label faint">Albireo: Letters</span>
           <h1 className="sub-done-title">{ok ? t("구독이 완료되었습니다", "You’re subscribed") : t("링크가 만료되었습니다", "This link has expired")}</h1>
           <p className="dim sub-done-text">
             {ok

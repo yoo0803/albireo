@@ -61,7 +61,7 @@ export default async function AuthorPage({ params }: Params) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(ld) }} />
       <header className="resume-head">
         <div className="stack" style={{ ["--gap" as string]: "18px" }}>
-          <span className="label faint">Albireo · Member</span>
+          <span className="label faint">Albireo: Member</span>
           <h1 className="display" style={{ fontSize: "clamp(3rem, 9vw, 7rem)" }}><ScrambleText text={p.byline.name} trigger="mount" /></h1>
           <p className="serif" style={{ fontSize: "1.3rem" }}>{p.byline.role}</p>
           {p.bio && <p className="dim" style={{ maxWidth: "36em" }}>{p.bio}</p>}

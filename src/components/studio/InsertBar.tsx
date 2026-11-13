@@ -189,7 +189,7 @@ export function InsertBar({ onFormat, onLink, onFootnote, onCite, onTable, onBlo
                         if (rows.length > 1) setGrid(rows.slice(0, 40).map((r) => r.slice(0, 6)));
                       } catch { setErr(t("클립보드 읽기 불가", "Clipboard unavailable")); }
                     }}
-                  >{t("붙여넣기 (엑셀 · CSV)", "Paste (Excel · CSV)")}</button>
+                  >{t("붙여넣기 (엑셀 / CSV)", "Paste (Excel / CSV)")}</button>
                 </div>
               </div>
               <div className="builder-preview"><CsvChart csv={csv} kind={kind} height={200} paper /></div>
@@ -207,7 +207,7 @@ export function InsertBar({ onFormat, onLink, onFootnote, onCite, onTable, onBlo
                   <input className="input" value={b} onChange={(e) => setB(e.target.value)} placeholder={t("다이어그램 제목", "Diagram title")} aria-label="Title" />
                 </div>
                 <textarea className="textarea code" style={{ minHeight: 140 }} value={a} onChange={(e) => setA(e.target.value)} aria-label="Diagram" spellCheck={false} />
-                <p className="panel-note" style={{ padding: 0 }}>{t("한 줄에 하나: A -> B : 설명 · A -- B (화살표 없음)", "One per line: A -> B : label · A -- B (no arrow)")}</p>
+                <p className="panel-note" style={{ padding: 0 }}>{t("한 줄에 하나: A -> B : 설명 / A -- B (화살표 없음)", "One per line: A -> B : label / A -- B (no arrow)")}</p>
               </div>
               <div className="builder-preview"><DiagramView source={diagramText} /></div>
             </div>

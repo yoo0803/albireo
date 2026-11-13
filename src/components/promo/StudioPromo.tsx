@@ -106,10 +106,10 @@ export function StudioPromo() {
   const grab = GRAB[scene].some(([a, b]) => l > a && l < b);
 
   const CAP = [
-    [t("마크다운으로 쓰고", "Write in Markdown"), t("## 제목 · **굵게** · > 인용이 바로 보이게", "## headings, **bold**, > quotes, rendered live")],
+    [t("마크다운으로 쓰고", "Write in Markdown"), t("## 제목 / **굵게** / > 인용이 바로 보이게", "## headings, **bold**, > quotes, rendered live")],
     [t("문장 단위로 검수하고", "Review by the sentence"), t("여섯 기준의 동료 검수", "Six-point peer review")],
     [t("함께 토론하고", "Talk it through"), t("의견과 근거를 한 스레드에서", "Views and evidence in one thread")],
-    [t("캔버스에서 생각을 엮고", "Shape ideas on a canvas"), t("도형 · 연결 · 폴더 · 손글씨까지", "Shapes, links, folders and ink")],
+    [t("캔버스에서 생각을 엮고", "Shape ideas on a canvas"), t("도형 / 연결 / 폴더 / 손글씨까지", "Shapes, links, folders and ink")],
     [t("데이터는 그래프와 표로", "Data as charts and tables"), t("CSV를 올리면 바로 시각화", "Drop a CSV, get a chart")],
     [t("궤도에 올립니다", "Publish to the orbit"), t("발행과 동시에 구독자에게", "Subscribers hear at once")],
   ];
@@ -263,7 +263,7 @@ function Debate({ l, t }: SceneProps) {
   const liked = l > 5.65;
   return (
     <div className="pr-debate">
-      <p className="pr-k">{t("토론 · 주제", "Debate · topic")}</p>
+      <p className="pr-k">{t("토론 주제", "Debate topic")}</p>
       <h4 className="pr-topic">{t("가이아 데이터만으로 결론 내도 될까?", "Can we conclude from Gaia data alone?")}</h4>
       <div className="pr-thread">
         {posts.map((p) => {
@@ -271,14 +271,14 @@ function Debate({ l, t }: SceneProps) {
           return (
             <div key={p.who} className={`pr-post d-${p.c}`} style={{ opacity: f, transform: `translateY(${(1 - f) * 14}px)` }}>
               <span className="pr-av">{p.who}</span>
-              <div><small>{p.name} · {t("방금", "just now")}</small><p>{p.txt}</p></div>
+              <div><small>{p.name} ({t("방금", "just now")})</small><p>{p.txt}</p></div>
             </div>
           );
         })}
         {sent && (
           <div className="pr-post d-blue mine" style={{ opacity: r, transform: `translateY(${(1 - r) * 14}px)` }}>
             <span className="pr-av">YC</span>
-            <div><small>Yeji C. · {t("방금", "just now")}</small><p>{reply}</p></div>
+            <div><small>Yeji C. ({t("방금", "just now")})</small><p>{reply}</p></div>
             <span className={`pr-like${liked ? " on" : ""}`} data-pt="like"><RocketGlyph /> {liked ? 3 : 2}</span>
           </div>
         )}

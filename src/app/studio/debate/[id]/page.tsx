@@ -5,7 +5,7 @@ import { DebateThread } from "@/components/studio/DebateThread";
 
 export default async function Topic({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { sb, user, profile } = await getViewer();
+  const { sb, profile } = await getViewer();
   const { data: topic } = await sb.from("debate_topics").select("*").eq("id", id).is("deleted_at", null).maybeSingle();
   if (!topic) notFound();
 
@@ -23,7 +23,7 @@ export default async function Topic({ params }: { params: Promise<{ id: string }
       {article && <Link href={`/studio/articles/${article.id}?tab=read`} className="chip">↳ {article.title}</Link>}
       <DebateThread
         topicId={id}
-        me={{ id: user!.id, discipline: profile!.discipline }}
+        me={{ id: profile!.id, discipline: profile!.discipline }}
         members={members ?? []}
         initial={comments ?? []}
       />

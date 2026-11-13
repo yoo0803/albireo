@@ -29,11 +29,12 @@ export function supabasePublic() {
   });
 }
 
-// 현재 사용자 + 멤버 여부
+// 현재 사용자 + 쓰는 프로필 (연결 승인된 계정은 그 프로필)
 export async function getViewer() {
   const sb = await supabaseServer();
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return { sb, user: null, profile: null } as const;
-  const { data: profile } = await sb.from("profiles").select("*").eq("id", user.id).single();
+  const { data: pid } = await sb.rpc("me");
+  const { data: profile } = await sb.from("profiles").select("*").eq("id", pid ?? user.id).single();
   return { sb, user, profile } as const;
 }

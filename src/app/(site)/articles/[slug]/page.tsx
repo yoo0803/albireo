@@ -92,8 +92,8 @@ export default async function ArticlePage({ params }: Params) {
           <span>{readingMinutes(body)} min read</span>
           <ShareButton url={absUrl(`/articles/${a.slug}`)} title={title} />
         </div>
-        {lang === "en" && !a.body_en && <p className="article-lang-note">Original in Korean · English version not available</p>}
-        {en && <p className="article-lang-note">English version · original in Korean</p>}
+        {lang === "en" && !a.body_en && <p className="article-lang-note">Original in Korean (English version not available)</p>}
+        {en && <p className="article-lang-note">English version (original in Korean)</p>}
         <div className="article-cover">
           {a.cover_url ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -135,13 +135,13 @@ export default async function ArticlePage({ params }: Params) {
         <nav className="wrap series-nav" aria-label={t("연재 회차", "Series episodes")}>
           {a.series.prev ? (
             <Link href={`/articles/${a.series.prev.slug}`} className="series-nav-item">
-              <span className="label faint">← {t("이전", "Previous")} · {episodeLabel(a.series.kind, a.series.prev.no, lang === "en")}</span>
+              <span className="label faint">← {t("이전", "Previous")}: {episodeLabel(a.series.kind, a.series.prev.no, lang === "en")}</span>
               <span className="series-nav-title">{lang === "en" && a.series.prev.title_en ? a.series.prev.title_en : a.series.prev.title}</span>
             </Link>
           ) : <span />}
           {a.series.next ? (
             <Link href={`/articles/${a.series.next.slug}`} className="series-nav-item is-next">
-              <span className="label faint">{t("다음", "Next")} · {episodeLabel(a.series.kind, a.series.next.no, lang === "en")} →</span>
+              <span className="label faint">{t("다음", "Next")}: {episodeLabel(a.series.kind, a.series.next.no, lang === "en")} →</span>
               <span className="series-nav-title">{lang === "en" && a.series.next.title_en ? a.series.next.title_en : a.series.next.title}</span>
             </Link>
           ) : <span />}

@@ -52,7 +52,7 @@ export default async function Analytics({ searchParams }: { searchParams: Promis
   if (!db) {
     return (
       <div className="stack" style={{ ["--gap" as string]: "18px" }}>
-        <StudioHead title={t("통계", "Analytics")} note={t("방문자 · 유입 경로 · 구독자", "Visitors · referrers · subscribers")} />
+        <StudioHead title={t("통계", "Analytics")} note={t("방문자 / 유입 경로 / 구독자", "Visitors / referrers / subscribers")} />
         <p className="dim">{t("Cloudflare 워커 환경 변수에 SUPABASE_SERVICE_ROLE_KEY 를 추가하면 통계가 켜져요.", "Add SUPABASE_SERVICE_ROLE_KEY to the Cloudflare Worker variables to turn analytics on.")}</p>
       </div>
     );
@@ -62,18 +62,18 @@ export default async function Analytics({ searchParams }: { searchParams: Promis
   const s = (data ?? null) as SiteStats | null;
   const best = [...top].sort((a, b) => (b.view_count ?? 0) - (a.view_count ?? 0)).slice(0, 8);
   const device = { mobile: t("모바일", "Mobile"), tablet: t("태블릿", "Tablet"), desktop: t("데스크톱", "Desktop") } as Record<string, string>;
-  const ref = (k: string) => (k === "direct" ? t("직접 · 북마크", "Direct · bookmark") : k);
+  const ref = (k: string) => (k === "direct" ? t("직접 / 북마크", "Direct / bookmark") : k);
 
   const kpi = [
     [t("오늘 방문자", "Visitors today"), s?.today_visitors ?? 0],
-    [t(`${days}일 방문자`, `Visitors · ${days}d`), s?.visitors ?? 0],
-    [t(`${days}일 페이지뷰`, `Page views · ${days}d`), s?.views ?? 0],
+    [t(`${days}일 방문자`, `Visitors (${days}d)`), s?.visitors ?? 0],
+    [t(`${days}일 페이지뷰`, `Page views (${days}d)`), s?.views ?? 0],
     [t("구독자", "Subscribers"), s?.subscribers ?? 0],
   ] as const;
 
   return (
     <div className="stack analytics" style={{ ["--gap" as string]: "28px" }}>
-      <StudioHead title={t("통계", "Analytics")} note={t("방문자 · 유입 경로 · 구독자. 쿠키 없이 익명 집계 (작업실 방문 제외)", "Visitors · referrers · subscribers. Anonymous, cookie-free (studio excluded)")} />
+      <StudioHead title={t("통계", "Analytics")} note={t("방문자 / 유입 경로 / 구독자. 쿠키 없이 익명 집계 (작업실 방문 제외)", "Visitors / referrers / subscribers. Anonymous, cookie-free (studio excluded)")} />
       <div className="range" role="group" aria-label={t("기간", "Range")}>
         {RANGES.map((r) => <Link key={r} href={`/studio/analytics?d=${r}`} aria-current={r === days ? "true" : undefined}>{r}{t("일", "d")}</Link>)}
       </div>
@@ -97,7 +97,7 @@ export default async function Analytics({ searchParams }: { searchParams: Promis
       </div>
 
       {!mailReady() && (
-        <p className="faint" style={{ fontSize: "0.85rem" }}>{t("구독 메일 발송은 SMTP_USER · SMTP_PASS 환경 변수를 넣으면 켜져요.", "Subscription emails turn on once SMTP_USER and SMTP_PASS are set.")}</p>
+        <p className="faint" style={{ fontSize: "0.85rem" }}>{t("구독 메일 발송은 SMTP_USER / SMTP_PASS 환경 변수를 넣으면 켜져요.", "Subscription emails turn on once SMTP_USER and SMTP_PASS are set.")}</p>
       )}
     </div>
   );

@@ -83,7 +83,7 @@ function ThreadNode({ n, who, meId, onReply, onDelete }: {
       </div>
       <p style={{ whiteSpace: "pre-wrap", color: deleted ? "var(--fg-faint)" : undefined }}>{deleted ? t("[삭제된 댓글]", "[deleted]") : renderInline(parseInline(n.body))}</p>
       <div style={{ display: "flex", gap: 4 }}>
-        {!deleted && <button className="btn btn-sm btn-ghost" onClick={() => setOpen((v) => !v)}>Reply</button>}
+        {!deleted && <button className="btn btn-sm btn-ghost" onClick={() => setOpen((v) => !v)}>{t("답글", "Reply")}</button>}
         {n.children.length > 0 && <button className="btn btn-sm btn-ghost" onClick={() => setCollapsed((v) => !v)}>{collapsed ? `+ ${countDescendants(n)}` : "−"}</button>}
         {n.author_id === meId && !deleted && <ConfirmButton label="Delete" ask={t("삭제하시겠습니까?", "Delete this?")} ok={t("삭제", "Delete")} onConfirm={async () => { await onDelete(n.id); }} />}
       </div>

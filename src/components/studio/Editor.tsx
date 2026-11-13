@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { saveArticle, setPublic, setStatus, type ArticleDraft } from "@/app/studio/actions";
 import { extractTerms } from "@/lib/text/wikilink";
@@ -11,11 +11,15 @@ import { CoverPicker } from "@/components/studio/CoverPicker";
 import { cleanStyle } from "@/lib/text/style";
 import type { Article, SeriesKind } from "@/types/database";
 import { episodeLabel } from "@/content/series";
+import { STATUS_LABEL } from "@/content/status";
+
+// 쉼표(전각 포함)로 나눈 태그
+const parseTags = (s: string) => [...new Set(s.split(/[,，、]/).map((x) => x.trim()).filter(Boolean))];
 
 export type SeriesOption = { id: string; title: string; kind: SeriesKind; next: number };
 import { useT } from "@/lib/i18n/client";
 
-export function Editor({ article, required, series = [] }: { article: Article; required: number; series?: SeriesOption[] }) {
+export function Editor({ article, required, series = [], side }: { article: Article; required: number; series?: SeriesOption[]; side?: ReactNode }) {
   const t = useT();
   const initial: ArticleDraft = {
     title: article.title,
@@ -35,6 +39,8 @@ export function Editor({ article, required, series = [] }: { article: Article; r
     series_no: article.series_no,
   };
   const [d, setD] = useState<ArticleDraft>(initial);
+  // 태그 입력 원문: 쉼표 · 공백 그대로 유지
+  const [tagText, setTagText] = useState(initial.tags.join(", "));
   const [base, setBase] = useState(JSON.stringify(initial));
   const [lang, setLang] = useState<"ko" | "en">("ko");
   const [msg, setMsg] = useState<string | null>(null);
@@ -50,14 +56,14 @@ export function Editor({ article, required, series = [] }: { article: Article; r
     start(async () => {
       const r = await saveArticle(article.id, d);
       if (r.ok) setBase(JSON.stringify(d));
-      setMsg(r.ok ? "Saved" : r.error);
+      setMsg(r.ok ? t("저장됨", "Saved") : r.error);
       setTimeout(() => setMsg(null), 2400);
     });
 
   const publish = () =>
     start(async () => {
       const r = await setPublic(article.id, true);
-      setMsg(r.ok ? "Published" : r.error);
+      setMsg(r.ok ? t("발행됨", "Published") : r.error);
       if (r.ok) router.refresh();
     });
 
@@ -69,6 +75,11 @@ export function Editor({ article, required, series = [] }: { article: Article; r
     addEventListener("keydown", onKey);
     return () => removeEventListener("keydown", onKey);
   });
+
+  // 분야 변경 즉시 상단 표시에 반영
+  useEffect(() => {
+    dispatchEvent(new CustomEvent("studio-field", { detail: d.discipline }));
+  }, [d.discipline]);
 
   // 이탈 경고
   useEffect(() => {
@@ -88,16 +99,16 @@ export function Editor({ article, required, series = [] }: { article: Article; r
 
         {lang === "ko" ? (
           <>
-            <input className="input serif" style={{ fontSize: "1.6rem", fontWeight: 700, padding: "12px 14px" }} value={d.title} onChange={(e) => set("title", e.target.value)} aria-label="Title" />
-            <input className="input" value={d.subtitle ?? ""} onChange={(e) => set("subtitle", e.target.value || null)} placeholder="Subtitle" aria-label="Subtitle" />
+            <input className="input serif" style={{ fontSize: "1.6rem", fontWeight: 700, padding: "12px 14px" }} value={d.title} onChange={(e) => set("title", e.target.value)} aria-label={t("제목", "Title")} placeholder={t("제목", "Title")} />
+            <input className="input" value={d.subtitle ?? ""} onChange={(e) => set("subtitle", e.target.value || null)} placeholder={t("부제", "Subtitle")} aria-label={t("부제", "Subtitle")} />
             <BodyEditor key="ko" value={d.body_md} onChange={(v) => set("body_md", v)} style={d.style} lang="ko" />
           </>
         ) : (
           <>
-            <p className="panel-note" style={{ padding: 0 }}>{t("영문판: EN 방문자에게 표시 · 비워두면 원문 표시 · 주석 · 검수는 원문 기준", "English version: shown to EN visitors · empty = original · notes and reviews follow the original")}</p>
-            <input className="input serif" style={{ fontSize: "1.6rem", fontWeight: 700, padding: "12px 14px" }} value={d.title_en ?? ""} onChange={(e) => set("title_en", e.target.value || null)} placeholder="English title" aria-label="English title" lang="en" />
-            <input className="input" value={d.subtitle_en ?? ""} onChange={(e) => set("subtitle_en", e.target.value || null)} placeholder="English subtitle" aria-label="English subtitle" lang="en" />
-            <BodyEditor key="en" value={d.body_en ?? ""} onChange={(v) => set("body_en", v || null)} style={d.style} lang="en" label="English body" />
+            <p className="panel-note" style={{ padding: 0 }}>{t("영문판: 영어 방문자에게 표시 (비워두면 원문 표시) / 주석과 검수는 원문 기준", "English version: shown to EN visitors (empty = original) / notes and reviews follow the original")}</p>
+            <input className="input serif" style={{ fontSize: "1.6rem", fontWeight: 700, padding: "12px 14px" }} value={d.title_en ?? ""} onChange={(e) => set("title_en", e.target.value || null)} placeholder={t("영문 제목", "English title")} aria-label={t("영문 제목", "English title")} lang="en" />
+            <input className="input" value={d.subtitle_en ?? ""} onChange={(e) => set("subtitle_en", e.target.value || null)} placeholder={t("영문 부제", "English subtitle")} aria-label={t("영문 부제", "English subtitle")} lang="en" />
+            <BodyEditor key="en" value={d.body_en ?? ""} onChange={(v) => set("body_en", v || null)} style={d.style} lang="en" label={t("영문 본문", "English body")} />
           </>
         )}
       </div>
@@ -105,52 +116,59 @@ export function Editor({ article, required, series = [] }: { article: Article; r
       <aside className="stack" style={{ ["--gap" as string]: "16px" }}>
         <div className="panel">
           <div className="panel-head">
-            <span className="mono">Manuscript</span>
-            <span className="mono dim">{article.status}{dirty ? " · unsaved" : ""}</span>
+            <span className="mono">{t("원고", "Manuscript")}</span>
+            <span className="mono dim">{t(...STATUS_LABEL[article.status])}{dirty ? t(" (저장 안 됨)", " (unsaved)") : ""}</span>
           </div>
-          <p className="panel-note">{t("주소 · 분야 · 태그 설정", "Slug · field · tags")}</p>
+          <p className="panel-note">{t("주소/분야/태그 설정", "Slug, field and tags")}</p>
           <div className="panel-body stack">
             <div className="field">
-              <label htmlFor="slug">Slug</label>
+              <label htmlFor="slug">{t("주소", "Slug")}</label>
               <input id="slug" className="input" value={d.slug} onChange={(e) => set("slug", e.target.value)} />
             </div>
             <div className="field">
-              <label htmlFor="disc">Field</label>
+              <label htmlFor="disc">{t("분야", "Field")}</label>
               <FieldPicker id="disc" value={d.discipline} onChange={(v) => set("discipline", v ?? "")} />
             </div>
             <div className="field">
-              <label htmlFor="tags">Tags (comma)</label>
-              <input id="tags" className="input" value={d.tags.join(", ")} onChange={(e) => set("tags", e.target.value.split(",").map((t) => t.trim()).filter(Boolean))} />
+              <label htmlFor="tags">{t("태그 (쉼표로 구분)", "Tags (comma-separated)")}</label>
+              <input
+                id="tags"
+                className="input"
+                value={tagText}
+                placeholder={t("예: 천문, 이중성", "e.g. astronomy, binaries")}
+                onChange={(e) => { setTagText(e.target.value); set("tags", parseTags(e.target.value)); }}
+                onBlur={() => setTagText(d.tags.join(", "))}
+              />
             </div>
             <div className="field">
-              <label htmlFor="excerpt">Excerpt (SEO)</label>
+              <label htmlFor="excerpt">{t("요약 (검색 노출)", "Excerpt (SEO)")}</label>
               <textarea id="excerpt" className="textarea" style={{ minHeight: 80 }} maxLength={200} value={d.excerpt ?? ""} onChange={(e) => set("excerpt", e.target.value || null)} />
             </div>
             {d.body_en !== null && (
               <div className="field">
-                <label htmlFor="excerpt_en">Excerpt (English)</label>
+                <label htmlFor="excerpt_en">{t("영문 요약", "Excerpt (English)")}</label>
                 <textarea id="excerpt_en" className="textarea" style={{ minHeight: 60 }} maxLength={200} value={d.excerpt_en ?? ""} onChange={(e) => set("excerpt_en", e.target.value || null)} lang="en" />
               </div>
             )}
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <button className={article.is_public ? "btn btn-gold" : "btn"} onClick={save} disabled={pending}>{pending ? "Saving…" : article.is_public ? t("저장 · 웹진에 바로 반영 ⌘S", "Save · update live ⌘S") : t("임시저장 ⌘S", "Save draft ⌘S")}</button>
+              <button className={article.is_public ? "btn btn-gold" : "btn"} onClick={save} disabled={pending} title="Ctrl+S">{pending ? t("저장 중…", "Saving…") : article.is_public ? t("저장 (웹진에 바로 반영)", "Save (updates live)") : t("임시저장", "Save draft")}</button>
               {article.status === "draft" && (
-                <button className="btn" onClick={() => start(async () => { await saveArticle(article.id, d); await setStatus(article.id, "in_review"); setMsg(t("검수 요청됨", "Review requested")); })}>Request review</button>
+                <button className="btn" onClick={() => start(async () => { await saveArticle(article.id, d); await setStatus(article.id, "in_review"); setMsg(t("검수 요청됨", "Review requested")); })}>{t("검수 요청", "Request review")}</button>
               )}
               {!article.is_public && article.peer_reviewed && (
-                <button className="btn btn-gold" onClick={publish} disabled={pending || dirty}>Publish</button>
+                <button className="btn btn-gold" onClick={publish} disabled={pending || dirty}>{t("발행", "Publish")}</button>
               )}
               {!article.is_public && !article.peer_reviewed && (
                 <ConfirmButton
-                  label={t("Publish · 검수는 나중에", "Publish · review later")}
+                  label={t("발행 (추후 검수)", "Publish (review later)")}
                   className="btn"
                   ask={t("검수 전에 발행하시겠습니까?", "Publish before review?")}
-                  sub={t("Peer-Reviewed 표시 없이 공개 · 개인 페이지 하이라이트 고정 불가 · 승인 완료 시 자동 인증", "Goes live without the Peer-Reviewed mark · can’t be pinned · certified automatically once approved")}
+                  sub={t("Peer-Reviewed 표시 없이 공개되고, 개인 페이지 하이라이트에 고정할 수 없습니다. 승인이 끝나면 자동으로 인증됩니다.", "Goes live without the Peer-Reviewed mark and can’t be pinned. It’s certified automatically once approved.")}
                   ok={t("발행", "Publish")}
                   onConfirm={async () => {
                     if (dirty) { const s = await saveArticle(article.id, d); if (!s.ok) return s; }
                     const r = await setPublic(article.id, true);
-                    if (r.ok) { setMsg(t("Published (검수 대기)", "Published (review pending)")); router.refresh(); }
+                    if (r.ok) { setMsg(t("발행됨 (검수 대기)", "Published (review pending)")); router.refresh(); }
                     return r;
                   }}
                 />
@@ -165,8 +183,8 @@ export function Editor({ article, required, series = [] }: { article: Article; r
             {!article.is_public && (
               <p className="panel-note" style={{ padding: 0 }}>
                 {article.peer_reviewed
-                  ? dirty ? t("임시저장 후 Publish (수정 시 검수 초기화)", "Save first (edits reset reviews)") : t(`검수 ${required}인 승인 완료 · Publish 가능`, `${required} approvals · ready to publish`)
-                  : t(`검수 ${required}인 승인 시 Peer-Reviewed 발행 · 또는 먼저 발행`, `Peer-Reviewed at ${required} approvals · or publish now`)}
+                  ? dirty ? t("임시저장 후 발행 (수정하면 검수 초기화)", "Save first (edits reset reviews)") : t(`검수 ${required}인 승인 완료: 발행 가능`, `${required} approvals: ready to publish`)
+                  : t(`검수 ${required}인 승인 시 Peer-Reviewed 발행 (먼저 발행도 가능)`, `Peer-Reviewed at ${required} approvals (or publish now)`)}
               </p>
             )}
             {msg && <p className="mono dim">{msg}</p>}
@@ -174,8 +192,8 @@ export function Editor({ article, required, series = [] }: { article: Article; r
         </div>
 
         <div className="panel">
-          <div className="panel-head"><span className="mono">Series</span>{cur && <span className="mono dim">{episodeLabel(cur.kind, d.series_no, false)}</span>}</div>
-          <p className="panel-note">{t("연재 · 정기간행의 회차로 묶기", "Make this an episode of a serial or periodical")}</p>
+          <div className="panel-head"><span className="mono">{t("연재", "Series")}</span>{cur && <span className="mono dim">{episodeLabel(cur.kind, d.series_no, false)}</span>}</div>
+          <p className="panel-note">{t("연재/정기간행의 회차로 묶기", "Make this an episode of a serial or periodical")}</p>
           <div className="panel-body stack">
             <div className="field">
               <label htmlFor="series">{t("연재", "Series")}</label>
@@ -203,13 +221,13 @@ export function Editor({ article, required, series = [] }: { article: Article; r
         </div>
 
         <div className="panel">
-          <div className="panel-head"><span className="mono">Typography</span></div>
-          <p className="panel-note">{t("이 원고의 본문 서체 · 웹진에도 적용", "Body typography for this piece · also on the webzine")}</p>
+          <div className="panel-head"><span className="mono">{t("서체", "Typography")}</span></div>
+          <p className="panel-note">{t("이 원고의 본문 서체 (웹진에도 적용)", "Body typography for this piece (also on the webzine)")}</p>
           <div className="panel-body"><StyleControls value={d.style} onChange={(s) => set("style", s)} /></div>
         </div>
 
         <div className="panel">
-          <div className="panel-head"><span className="mono">Thumbnail</span></div>
+          <div className="panel-head"><span className="mono">{t("표지", "Thumbnail")}</span></div>
           <p className="panel-note">{t("직접 올리거나 템플릿 선택", "Upload an image or pick a template")}</p>
           <div className="panel-body">
             <CoverPicker
@@ -224,12 +242,13 @@ export function Editor({ article, required, series = [] }: { article: Article; r
         </div>
 
         <div className="panel">
-          <div className="panel-head"><span className="mono">Linked concepts · {terms.length}</span></div>
+          <div className="panel-head"><span className="mono">{t("연결 개념어", "Linked concepts")} ({terms.length})</span></div>
           <p className="panel-note">{t("[[개념어]] 자동 연결", "[[concepts]] link automatically")}</p>
           <div className="panel-body" style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
             {terms.length ? terms.map((t) => <span key={t} className="chip">{t}</span>) : <span className="dim">{t("[[개념어]] 없음", "No [[concepts]]")}</span>}
           </div>
         </div>
+        {side}
       </aside>
     </div>
   );

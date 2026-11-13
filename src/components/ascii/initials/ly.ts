@@ -9,7 +9,7 @@ export const meta = {
   rows: ROWS,
   fps: 20,
   // 0 크림 · 1 금빛 · 2 호박 · 3 괘선 · 4 붉은 잉크 · 5 작가명
-  palette: palette(["#fff7e6", "#ffe2a8", "#f2c27a", "#3b3127", "#e0624f", "#6b5a45"]),
+  palette: palette(["#fffaf0", "#ffe6b0", "#f2c27a", "#3b3127", "#e0624f", "#5e4f3d"]),
 };
 
 const PER = 10;
@@ -59,7 +59,8 @@ function outline(g: G, cx: number, cy: number, R: number, f: (a: number) => numb
 export default function create() {
   const g = new Grid(COLS, ROWS);
   // 이니셜은 조금 작게 · 위로: 아래에 부바/키키 자리
-  const L = layout("YL", 3.3, 2.35, 6);
+  // 정수 격자에 맞춘 크기: Y 가지 · 기둥 좌우 대칭
+  const L = layout("YL", 3.5, 2.5, 6);
   // 경로 순서 중복 제거
   const seen = new Set<string>();
   const path: [number, number][] = [];
@@ -103,6 +104,12 @@ export default function create() {
       g.text(34, 31, "kiki", "4");
     }
 
+    // 글자 자리 비우기: 배경 단어 · 괘선이 획을 가리지 않게
+    for (const k of L.mask) {
+      const [x, y] = k.split(",").map(Number);
+      for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) g.set(x + dx, y + dy, " ", "3");
+    }
+
     // 펜 진행
     const n = path.length;
     const shown = Math.floor(Math.max(0, Math.min(1, (lt - 0.6) / 4.6)) * n);
@@ -111,9 +118,8 @@ export default function create() {
       if (hash(x, y, 3) > fade) continue;
       const fresh = shown - i < 6;
       const k = ink[i];
-      g.set(x, y, k.s[k.i % k.s.length], fresh ? "0" : "1");
-      g.set(x + 1, y, k.s[(k.i + 7) % k.s.length], fresh ? "0" : "1");
-      if (g.get(x - 1, y) === " ") g.set(x - 1, y, "·", "2");
+      g.set(x, y, k.s[k.i % k.s.length], fresh ? "4" : "0");
+      g.set(x + 1, y, k.s[(k.i + 7) % k.s.length], fresh ? "4" : "0");
     }
     if (shown > 0 && shown < n) {
       const [x, y] = path[shown - 1];

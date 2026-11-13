@@ -23,6 +23,18 @@ describe("cluster", () => {
       }
   });
 
+  it("방향 고정 섬: 개수와 무관하게 오른쪽 위", () => {
+    for (const extra of [0, 3]) {
+      const gs = [...groups, ...Array.from({ length: extra }, (_, k) => ({ id: `x${k}`, items: mk(`x${k}`, 4) })), { id: "p", items: mk("p", 4), angle: -Math.PI / 4 }];
+      const a = cluster({ id: "hero", w: 520, h: 300 }, gs, opts);
+      const ps = a.filter((q) => q.id.startsWith("p"));
+      const mx = ps.reduce((s, q) => s + q.x + q.w / 2, 0) / ps.length;
+      const my = ps.reduce((s, q) => s + q.y + q.h / 2, 0) / ps.length;
+      expect(mx).toBeGreaterThan(opts.w / 2);
+      expect(my).toBeLessThan(opts.h / 2);
+    }
+  });
+
   it("hero 중앙", () => {
     const [h] = cluster({ id: "hero", w: 520, h: 300 }, groups, opts);
     expect(h.x + h.w / 2).toBe(1300);

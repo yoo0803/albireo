@@ -4,7 +4,7 @@ export type Chapter = { no: string; title: string; body: string[]; quote?: strin
 
 export const ABOUT: Record<"ko" | "en", { kicker: string; title: string; lede: string; chapters: Chapter[]; facts: [string, string][]; close: string }> = {
   ko: {
-    kicker: "About · β Cygni",
+    kicker: "About: β Cygni",
     title: "두 개의 빛, 같은 방향",
     lede: "Albireo라는 이름에 담은 이야기입니다.",
     chapters: [
@@ -45,16 +45,16 @@ export const ABOUT: Record<"ko" | "en", { kicker: string; title: string; lede: s
     ],
     facts: [
       ["별자리", "백조자리 β (Cygnus)"],
-      ["보이는 간격", "약 35″ · 위치각 54° · 3.1등 / 5.1등"],
-      ["알비레오 A", "주황빛 거성 Aa (K2 II) + 동반성 Ac (B8) · 0.4″ · 주기 약 122년"],
+      ["보이는 간격", "약 35″, 위치각 54°, 3.1등/5.1등"],
+      ["알비레오 A", "주황빛 거성 Aa (K2 II) + 동반성 Ac (B8), 0.4″, 주기 약 122년"],
       ["알비레오 B", "빠르게 자전하는 푸른 Be별 (B8 Ve)"],
-      ["거리 (가이아)", "A 약 365광년 · B 약 395광년 · A는 오차가 큼"],
-      ["A · B의 관계", "겉보기 이중성일 가능성이 높음 (움직임이 서로 다름)"],
+      ["거리 (가이아)", "A 약 365광년, B 약 395광년 (A는 오차가 큼)"],
+      ["A와 B의 관계", "겉보기 이중성일 가능성이 높음 (움직임이 서로 다름)"],
     ],
     close: "각자의 궤도에서, 함께 앞으로.",
   },
   en: {
-    kicker: "About · β Cygni",
+    kicker: "About: β Cygni",
     title: "Two lights, one direction",
     lede: "The story behind the name Albireo.",
     chapters: [
@@ -94,12 +94,12 @@ export const ABOUT: Record<"ko" | "en", { kicker: string; title: string; lede: s
       },
     ],
     facts: [
-      ["Constellation", "Cygnus · β Cygni"],
-      ["Apparent gap", "≈ 35″ · PA 54° · mag 3.1 / 5.1"],
-      ["Albireo A", "Orange giant Aa (K2 II) + companion Ac (B8) · 0.4″ · P ≈ 122 yr"],
+      ["Constellation", "Cygnus (β Cygni)"],
+      ["Apparent gap", "≈ 35″, PA 54°, mag 3.1/5.1"],
+      ["Albireo A", "Orange giant Aa (K2 II) + companion Ac (B8), 0.4″, P ≈ 122 yr"],
       ["Albireo B", "Fast-spinning blue Be star (B8 Ve)"],
-      ["Distance (Gaia)", "A ≈ 365 ly · B ≈ 395 ly · large error for A"],
-      ["A · B relation", "Most likely an optical double (different motions)"],
+      ["Distance (Gaia)", "A ≈ 365 ly, B ≈ 395 ly (large error for A)"],
+      ["A–B relation", "Most likely an optical double (different motions)"],
     ],
     close: "Each in our own orbit, forward together.",
   },

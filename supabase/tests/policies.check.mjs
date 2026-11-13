@@ -222,15 +222,28 @@ check("cannot change own membership", !x.ok, x.e?.message);
 x = await as("yeji", "update profiles set bio = 'x' where id=$1 returning id", [ids.lee]);
 check("cannot edit others' profile", x.ok && x.r.rowCount === 0);
 
-const yh = (await c.query("select handle from profiles where id=$1", [ids.yeji])).rows[0].handle;
-check("default handle hides email", /^user-[0-9a-f]{8}$/.test(yh), yh);
+const oh = (await c.query("select handle from profiles where id=$1", [ids.outsider])).rows[0].handle;
+const yhOf = async () => (await c.query("select handle from profiles where id=$1", [ids.yeji])).rows[0].handle;
+check("default handle hides email", /^user-[0-9a-f]{8}$/.test(oh), oh);
+// 멤버 핸들: 이름소문자-성이니셜, 직접 변경 불가
+x = await as("yeji", "update profiles set display_name = 'Yeji C.' where id=$1 returning handle", [ids.yeji]);
+check("member handle follows name", x.ok && x.r.rows[0].handle === "yeji-c", x.e?.message ?? x.r?.rows[0]?.handle);
+x = await as("yeji", "update profiles set handle = 'boss' where id=$1", [ids.yeji]);
+check("handle not editable", !x.ok, x.e?.message);
+await c.query("update profiles set display_name = 'H' where id=$1", [ids.han]);
+const hh = (await c.query("select handle from profiles where id=$1", [ids.han])).rows[0].handle;
+check("single-letter name handle", hh === "h", hh);
+await c.query("update profiles set display_name = 'Yeji Cho' where id=$1", [ids.lee]);
+const lh = (await c.query("select handle from profiles where id=$1", [ids.lee])).rows[0].handle;
+check("handle collision gets suffix", lh === "yeji-c-2", lh);
+await c.query("update profiles set display_name = 'lee' where id=$1", [ids.lee]);
 x = await as("anon", "select count(*)::int n from profiles");
 check("anon sees member profiles only", x.ok && x.r.rows[0].n === 4, `n=${x.r?.rows[0].n}`);
 x = await as("outsider", "select count(*)::int n from profiles where id = $1", [ids.outsider]);
 check("non-member sees own profile", x.ok && x.r.rows[0].n === 1);
 x = await as("yeji", "update articles set tags = array_fill('t'::text, array[20]) where id=$1", [aid]);
 check("tag count capped", !x.ok);
-x = await as("anon", "select * from public_contributions($1)", [yh]);
+x = await as("anon", "select * from public_contributions($1)", [await yhOf()]);
 check("public_contributions RPC", x.ok && x.r.rows[0].articles === 1, JSON.stringify(x.r?.rows[0] ?? x.e?.message));
 
 // 캔버스
@@ -405,6 +418,38 @@ check("episode number validated", !x.ok);
 x = await as("yeji", "delete from series where id = $1 returning id", [sid]);
 st = await c.query("select series_id from articles where id = $1", [aid]);
 check("deleting series keeps articles", x.ok && x.r.rowCount === 1 && st.rows[0].series_id === null, x.e?.message);
+
+// ─── 한 프로필 · 여러 계정 ───
+const sec = (await c.query("insert into auth.users (email) values ('yeji2@uni.edu') returning id")).rows[0].id;
+ids.second = sec;
+x = await as("second", "insert into profile_logins (user_id, profile_id) values ($1, $2)", [sec, ids.lee]);
+check("second account requests link", x.ok, x.e?.message);
+x = await as("lee", "select email from profile_logins where user_id = $1", [sec]);
+check("owner sees requester email", x.ok && x.r.rows[0]?.email === "yeji2@uni.edu", x.e?.message);
+x = await as("yeji", "select count(*)::int n from profile_logins");
+check("others cannot see link requests", x.ok && x.r.rows[0].n === 0);
+x = await as("second", "select count(*)::int n from articles where author_id = $1", [ids.lee]);
+check("pending link grants nothing", x.ok && x.r.rows[0].n === 0);
+x = await as("second", "update profile_logins set status='approved', decided_by=$2, decided_at=now() where user_id=$1", [sec, ids.lee]);
+check("requester cannot self-approve", !x.ok || x.r.rowCount === 0);
+x = await as("yeji", "update profile_logins set status='approved', decided_by=$2, decided_at=now() where user_id=$1", [sec, ids.yeji]);
+check("other profile cannot approve", !x.ok || x.r.rowCount === 0);
+x = await as("lee", "update profile_logins set status='approved', decided_by=$2, decided_at=now() where user_id=$1 returning status", [sec, ids.lee]);
+check("profile owner approves", x.ok && x.r.rowCount === 1, x.e?.message);
+x = await as("second", "select public.me() m, public.is_member() im");
+check("approved account acts as profile", x.ok && x.r.rows[0].m === ids.lee && x.r.rows[0].im === true, x.e?.message);
+x = await as("second", "insert into canvases (title) values ('shared') returning owner_id");
+check("insert default uses shared profile", x.ok && x.r.rows[0].owner_id === ids.lee, x.e?.message);
+x = await as("second", "update profiles set bio = 'shared' where id=$1 returning id", [ids.lee]);
+check("approved account edits shared profile", x.ok && x.r.rowCount === 1, x.e?.message);
+x = await as("lee", "insert into profile_logins (user_id, profile_id) values ($1, $2)", [ids.lee, ids.seo]);
+check("member cannot link to another profile", !x.ok, x.e?.message);
+x = await as("service", "select member_email_exists('yeji2@uni.edu') ok");
+check("linked email may request login link", x.ok && x.r.rows[0].ok === true, x.e?.message);
+x = await as("lee", "delete from profile_logins where user_id=$1 returning user_id", [sec]);
+check("profile owner can unlink", x.ok && x.r.rowCount === 1, x.e?.message);
+x = await as("second", "select public.me() m");
+check("unlinked account back to itself", x.ok && x.r.rows[0].m === sec);
 
 await c.end();
 const fail = results.filter((r) => !r.ok).length;

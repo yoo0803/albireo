@@ -124,6 +124,17 @@ export type SiteStats = {
   subscribers: number;
 };
 
+export type ProfileLogin = {
+  user_id: string;
+  profile_id: string;
+  status: "pending" | "approved" | "declined";
+  note: string | null;
+  email: string | null;
+  created_at: string;
+  decided_at: string | null;
+  decided_by: string | null;
+};
+
 export type ProfilePin = { profile_id: string; article_id: string; position: number };
 
 export type ArticleAuthor = { article_id: string; profile_id: string; contribution: string | null };
@@ -214,6 +225,7 @@ export type Database = {
       srs_cards: Table<SrsCard, Pick<SrsCard, "user_id" | "concept_id"> & Partial<SrsCard>>;
       canvases: Table<Canvas, Partial<Canvas>>;
       profile_pins: Table<ProfilePin, ProfilePin>;
+      profile_logins: Table<ProfileLogin, Pick<ProfileLogin, "user_id" | "profile_id"> & Partial<ProfileLogin>>;
       subscribers: Table<Subscriber, Pick<Subscriber, "email"> & Partial<Subscriber>>;
       login_link_log: Table<{ id: number; at: string; who: string }, { who: string }>;
       member_requests: Table<MemberRequest, Pick<MemberRequest, "email" | "name"> & Partial<MemberRequest>>;
@@ -223,6 +235,7 @@ export type Database = {
     Views: { [_ in never]: never };
     Functions: {
       is_member: { Args: Record<string, never>; Returns: boolean };
+      me: { Args: Record<string, never>; Returns: string };
       purge_expired_trash: { Args: Record<string, never>; Returns: number };
       member_email_exists: { Args: { e: string }; Returns: boolean };
       is_coauthor: { Args: { a: string }; Returns: boolean };

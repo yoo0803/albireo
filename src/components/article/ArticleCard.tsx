@@ -33,7 +33,7 @@ export function ArticleCard({ a, index }: { a: Card; index?: number }) {
       <h3 className="card-title">{title}</h3>
       <div className="mono faint card-by card-row">
         <span>{fmt(a.published_at)}</span>
-        <span aria-label={`${a.view_count ?? 0} views, ${a.like_count ?? 0} likes`}>{a.view_count ?? 0} views · <RocketGlyph /> {a.like_count ?? 0}</span>
+        <span aria-label={`${a.view_count ?? 0} views, ${a.like_count ?? 0} likes`}>{a.view_count ?? 0} views / <RocketGlyph /> {a.like_count ?? 0}</span>
       </div>
     </Link>
   );

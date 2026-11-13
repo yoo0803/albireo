@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { TEAM } from "@/content/team";
+import { getT } from "@/lib/i18n/server";
 
-export function SiteFooter() {
+const CONTACT = "albireo.dev.00@gmail.com";
+
+export async function SiteFooter() {
+  const t = await getT();
   return (
     <footer className="site-footer">
       <div className="wrap">
@@ -17,7 +21,10 @@ export function SiteFooter() {
           <Link href="/credits">Credits</Link>
         </nav>
       </div>
-      <div className="wrap mono faint footer-base">© {new Date().getFullYear()} Albireo · Built by Yeji C.</div>
+      <div className="wrap footer-contact">
+        <a href={`mailto:${CONTACT}`} className="mono">{t("운영자 문의", "Contact")}: {CONTACT}</a>
+      </div>
+      <div className="wrap mono faint footer-base">© {new Date().getFullYear()} Albireo / Built by Yeji C.</div>
     </footer>
   );
 }

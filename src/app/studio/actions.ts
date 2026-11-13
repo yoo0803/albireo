@@ -27,13 +27,13 @@ async function member() {
 
 // ─── 아티클 ──────────────────────────────────────────
 export async function createArticle(form: FormData) {
-  const { sb, user, profile } = await member();
+  const { sb, profile } = await member();
   const title = String(form.get("title") ?? "").trim() || "Untitled";
   const prefs = cleanPrefs(profile.prefs);
   const discipline = cleanField(form.get("discipline")) ?? prefs.field ?? profile.discipline ?? "cs";
   const slug = `${slugify(title)}-${Math.random().toString(36).slice(2, 6)}`;
 
-  const { data, error } = await sb.from("articles").insert({ title, slug, discipline, author_id: user.id, style: prefs.style as Json }).select("id").single();
+  const { data, error } = await sb.from("articles").insert({ title, slug, discipline, author_id: profile.id, style: prefs.style as Json }).select("id").single();
   if (error) throw error;
   redirect(`/studio/articles/${data.id}`);
 }
@@ -167,7 +167,7 @@ export async function removeCoauthor(articleId: string, profileId: string): Prom
 // ─── 피어 리뷰 ───────────────────────────────────────
 export async function submitReview(articleId: string, verdict: ReviewVerdict, checklist: Record<string, boolean>, note: string): Promise<Result> {
   const t = await getT();
-  const { sb, user } = await member();
+  const { sb, profile } = await member();
   // 허용 키만 · 승인은 전 항목 필수
   const clean = Object.fromEntries(REVIEW_CHECKLIST.map((c) => [c.id, checklist?.[c.id] === true]));
   if (verdict === "approve" && !Object.values(clean).every(Boolean)) return { ok: false, error: t("체크리스트 전 항목 필요", "Tick every checklist item") };
@@ -176,7 +176,7 @@ export async function submitReview(articleId: string, verdict: ReviewVerdict, ch
   note = String(note ?? "").slice(0, 2000);
   const { error } = await sb.from("peer_reviews").upsert({
     article_id: articleId,
-    reviewer_id: user.id,
+    reviewer_id: profile.id,
     verdict,
     checklist: checklist as Json,
     note: note || null,
@@ -188,16 +188,16 @@ export async function submitReview(articleId: string, verdict: ReviewVerdict, ch
 
 // ─── 토론 ────────────────────────────────────────────
 export async function createTopic(form: FormData) {
-  const { sb, user } = await member();
+  const { sb, profile } = await member();
   const title = String(form.get("title") ?? "").trim().slice(0, 200);
   if (!title) return;
   // 연달아 누른 경우: 1분 안에 같은 제목이면 새로 만들지 않음
   const since = new Date(Date.now() - 60_000).toISOString();
-  const { data: dup } = await sb.from("debate_topics").select("id").eq("created_by", user.id).eq("title", title).is("deleted_at", null).gt("created_at", since).limit(1).maybeSingle();
+  const { data: dup } = await sb.from("debate_topics").select("id").eq("created_by", profile.id).eq("title", title).is("deleted_at", null).gt("created_at", since).limit(1).maybeSingle();
   if (dup) redirect(`/studio/debate/${dup.id}`);
   const { data, error } = await sb
     .from("debate_topics")
-    .insert({ title, prompt: String(form.get("prompt") ?? "") || null, article_id: String(form.get("article_id") ?? "") || null, created_by: user.id })
+    .insert({ title, prompt: String(form.get("prompt") ?? "") || null, article_id: String(form.get("article_id") ?? "") || null, created_by: profile.id })
     .select("id")
     .single();
   if (error) throw error;
@@ -262,7 +262,7 @@ export async function deleteSeries(id: string): Promise<Result> {
 
 // 다음 회차 원고 바로 만들기
 export async function createEpisode(form: FormData) {
-  const { sb, user, profile } = await member();
+  const { sb, profile } = await member();
   const seriesId = String(form.get("series_id") ?? "");
   if (!UUID.test(seriesId)) return;
   const { data: s } = await sb.from("series").select("id, title, kind").eq("id", seriesId).maybeSingle();
@@ -274,7 +274,7 @@ export async function createEpisode(form: FormData) {
   const prefs = cleanPrefs(profile.prefs);
   const { data, error } = await sb
     .from("articles")
-    .insert({ title, slug: `${slugify(title)}-${Math.random().toString(36).slice(2, 6)}`, discipline: prefs.field ?? profile.discipline ?? "cs", author_id: user.id, style: prefs.style as Json, series_id: seriesId, series_no: next })
+    .insert({ title, slug: `${slugify(title)}-${Math.random().toString(36).slice(2, 6)}`, discipline: prefs.field ?? profile.discipline ?? "cs", author_id: profile.id, style: prefs.style as Json, series_id: seriesId, series_no: next })
     .select("id")
     .single();
   if (error) throw error;
@@ -284,10 +284,10 @@ export async function createEpisode(form: FormData) {
 
 // ─── 캔버스 ──────────────────────────────────────────
 export async function createCanvas(form: FormData) {
-  const { sb, user } = await member();
+  const { sb, profile } = await member();
   const { data, error } = await sb
     .from("canvases")
-    .insert({ title: String(form.get("title") ?? "").trim() || "Untitled canvas", owner_id: user.id })
+    .insert({ title: String(form.get("title") ?? "").trim() || "Untitled canvas", owner_id: profile.id })
     .select("id")
     .single();
   if (error) throw error;
@@ -296,8 +296,8 @@ export async function createCanvas(form: FormData) {
 
 // 캔버스 잠금 (만든 사람만 · DB 트리거가 한 번 더 확인)
 export async function setCanvasLock(id: string, locked: boolean): Promise<Result> {
-  const { sb, user } = await member();
-  const { data, error } = await sb.from("canvases").update({ locked }).eq("id", id).eq("owner_id", user.id).select("id");
+  const { sb, profile } = await member();
+  const { data, error } = await sb.from("canvases").update({ locked }).eq("id", id).eq("owner_id", profile.id).select("id");
   if (error) return { ok: false, error: error.message };
   if (!data?.length) return { ok: false, error: (await getT())("만든 사람만 잠글 수 있습니다.", "Only the owner can lock this canvas.") };
   revalidatePath("/studio/canvas");
@@ -328,19 +328,61 @@ export async function appendImage(articleId: string, url: string, alt: string): 
 
 // ─── 프로필 ──────────────────────────────────────────
 export async function updateProfile(form: FormData): Promise<void> {
-  const { sb, user, profile } = await member();
-  const handle = String(form.get("handle") ?? "").trim().toLowerCase();
+  const { sb, profile } = await member();
   const display_name = String(form.get("display_name") ?? "").trim().slice(0, 40);
-  if (!display_name || !/^[a-z0-9_-]{2,32}$/.test(handle)) return;
-  await sb.from("profiles").update({
-    handle,
+  if (!display_name) return;
+  // 핸들은 이름에서 자동 (DB 트리거)
+  const { data } = await sb.from("profiles").update({
     display_name,
     role_title: String(form.get("role_title") ?? "").trim().slice(0, 80) || null,
     bio: String(form.get("bio") ?? "").trim().slice(0, 600) || null,
-  }).eq("id", user.id);
-  revalidatePath("/studio/settings");
+  }).eq("id", profile.id).select("handle").maybeSingle();
+  revalidatePath("/studio", "layout");
   revalidatePath(`/authors/${profile.handle}`);
-  revalidatePath(`/authors/${handle}`);
+  if (data?.handle) revalidatePath(`/authors/${data.handle}`);
+}
+
+// 로그아웃
+export async function signOut(): Promise<void> {
+  const v = await getViewer();
+  await v.sb.auth.signOut();
+  redirect("/");
+}
+
+// ─── 로그인 계정 연결 ────────────────────────────────
+// 비멤버 계정: 기존 멤버 프로필에 연결 요청
+export async function requestLogin(form: FormData): Promise<void> {
+  const { sb, user, profile } = await getViewer();
+  if (!user || profile?.is_member) return;
+  const target = String(form.get("profile") ?? "");
+  if (!/^[0-9a-f-]{36}$/i.test(target)) return;
+  const note = String(form.get("note") ?? "").trim().slice(0, 200) || null;
+  // 거절 · 대기 중인 이전 요청은 새 요청으로 교체
+  await sb.from("profile_logins").delete().eq("user_id", user.id).neq("status", "approved");
+  await sb.from("profile_logins").insert({ user_id: user.id, profile_id: target, note });
+  revalidatePath("/studio", "layout");
+}
+
+// 요청 취소 (요청자)
+export async function cancelLogin(): Promise<void> {
+  const { sb, user } = await getViewer();
+  if (!user) return;
+  await sb.from("profile_logins").delete().eq("user_id", user.id).neq("status", "approved");
+  revalidatePath("/studio", "layout");
+}
+
+// 승인 · 거절 · 해제 (프로필 측)
+export async function decideLogin(userId: string, decision: "approved" | "declined" | "remove"): Promise<Result> {
+  const t = await getT();
+  const { sb, user, profile } = await member();
+  if (!/^[0-9a-f-]{36}$/i.test(userId) || userId === user.id) return { ok: false, error: t("잘못된 요청", "Bad request") };
+  const q = decision === "remove"
+    ? sb.from("profile_logins").delete().eq("user_id", userId).eq("profile_id", profile.id).select("user_id")
+    : sb.from("profile_logins").update({ status: decision, decided_at: new Date().toISOString(), decided_by: profile.id }).eq("user_id", userId).eq("profile_id", profile.id).select("user_id");
+  const { data, error } = await q;
+  if (error || !data?.length) return { ok: false, error: t("처리하지 못했습니다.", "Couldn’t update.") };
+  revalidatePath("/studio/settings");
+  return { ok: true };
 }
 
 // 비밀번호 설정 · 변경 (멤버 본인)
@@ -434,12 +476,12 @@ export async function purgeExpired() {
 // ─── 하이라이트 (최대 3, 검수 인증 공개글) ────────────
 export async function savePins(form: FormData): Promise<void> {
   const t = await getT();
-  const { sb, user } = await member();
+  const { sb, profile } = await member();
   const ids = [1, 2, 3].map((n) => String(form.get(`pin${n}`) ?? "")).filter((v) => isUuid(v));
   const uniq = [...new Set(ids)].slice(0, 3);
-  await sb.from("profile_pins").delete().eq("profile_id", user.id);
+  await sb.from("profile_pins").delete().eq("profile_id", profile.id);
   if (uniq.length) {
-    const { error } = await sb.from("profile_pins").insert(uniq.map((article_id, i) => ({ profile_id: user.id, article_id, position: i + 1 })));
+    const { error } = await sb.from("profile_pins").insert(uniq.map((article_id, i) => ({ profile_id: profile.id, article_id, position: i + 1 })));
     if (error) throw new Error(t("검수 인증된 공개 글만 고정 가능", "Only peer-reviewed published articles can be pinned"));
   }
   revalidatePath("/authors", "layout");
@@ -448,11 +490,11 @@ export async function savePins(form: FormData): Promise<void> {
 
 // ─── 개인 기본값 ─────────────────────────────────────
 export async function savePrefs(form: FormData): Promise<void> {
-  const { sb, user } = await member();
+  const { sb, profile } = await member();
   let raw: unknown = {};
   try { raw = JSON.parse(String(form.get("prefs") ?? "{}")); } catch {}
   const prefs = cleanPrefs(raw);
-  const { error } = await sb.from("profiles").update({ prefs: prefs as unknown as Json }).eq("id", user.id);
+  const { error } = await sb.from("profiles").update({ prefs: prefs as unknown as Json }).eq("id", profile.id);
   if (error) throw new Error(error.message);
   revalidatePath("/studio/settings");
 }

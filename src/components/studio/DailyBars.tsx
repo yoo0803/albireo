@@ -28,7 +28,7 @@ export function DailyBars({ data, days }: { data: Day[]; days: number }) {
   return (
     <figure className="daily">
       <div className="daily-tip" aria-live="polite" data-on={h ? "" : undefined}>
-        {h ? <><b>{fmt(h.day)}</b> · {h.visitors} {t("명", "visitors")} · {h.views} {t("페이지뷰", "views")}</> : t("막대에 마우스를 올려 보세요", "Hover a bar")}
+        {h ? <><b>{fmt(h.day)}</b>: {h.visitors} {t("명", "visitors")} / {h.views} {t("페이지뷰", "views")}</> : t("막대에 마우스를 올려 보세요", "Hover a bar")}
       </div>
       <div className="daily-plot">
       <div className="daily-y" aria-hidden="true">{[...ticks].reverse().map((v) => <span key={v}>{v}</span>)}</div>

@@ -36,8 +36,8 @@ export function CoauthorPanel({ articleId, authorId, members, initial }: Props) 
 
   return (
     <div className="panel">
-      <div className="panel-head"><span className="mono">Co-authors</span></div>
-      <p className="panel-note">{t("공저자 지정 · 기여 표기", "Add co-authors · credit contributions")}</p>
+      <div className="panel-head"><span className="mono">{t("공저자", "Co-authors")}</span></div>
+      <p className="panel-note">{t("공저자 지정과 기여 표기", "Add co-authors and credit contributions")}</p>
       <div className="panel-body stack">
         {rows.map((r) => (
           <div key={r.profile_id} style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
@@ -47,12 +47,12 @@ export function CoauthorPanel({ articleId, authorId, members, initial }: Props) 
         ))}
         {candidates.length > 0 && (
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-            <select className="select" style={{ width: "auto" }} value={pick} onChange={(e) => setPick(e.target.value)} aria-label="Member">
+            <select className="select" style={{ width: "auto" }} value={pick} onChange={(e) => setPick(e.target.value)} aria-label={t("멤버", "Member")}>
               <option value="">—</option>
               {candidates.map((m) => <option key={m.id} value={m.id}>{m.display_name}</option>)}
             </select>
             <input className="input" style={{ flex: "1 1 120px" }} value={note} onChange={(e) => setNote(e.target.value)} placeholder={t("기여", "Contribution")} maxLength={80} />
-            <button className="btn btn-sm" onClick={add} disabled={!pick || pending}>Add</button>
+            <button className="btn btn-sm" onClick={add} disabled={!pick || pending}>{t("추가", "Add")}</button>
           </div>
         )}
         {err && <p className="error-text">{err}</p>}

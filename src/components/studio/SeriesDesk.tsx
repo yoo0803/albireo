@@ -80,7 +80,7 @@ function DeskRow({ s, en }: { s: DeskSeries; en: boolean }) {
           <div className="desk-title-wrap">
             <h2 className="desk-title">{s.title}</h2>
             <span className="mono faint">
-              {pick(CADENCE[s.cadence], en)} · {s.owner} · {t(`공개 ${live} / 전체 ${s.episodes.length}`, `${live} live / ${s.episodes.length} total`)}
+              {pick(CADENCE[s.cadence], en)} / {s.owner} / {t(`공개 ${live} / 전체 ${s.episodes.length}`, `${live} live / ${s.episodes.length} total`)}
             </span>
           </div>
           <div className="desk-actions">
@@ -165,7 +165,7 @@ function SeriesFields({ s }: { s?: DeskSeries }) {
           <label key={k} className="chip" data-on={kind === k || undefined}>
             <input type="radio" name="kind" value={k} checked={kind === k} onChange={() => setKind(k)} />
             {pick(KIND[k], en)}
-            <span className="faint">{k === "serial" ? t("이어지는 이야기 · n화", "Continuing story · Ep. n") : t("호 단위 발행 · 제n호", "Issues · No. n")}</span>
+            <span className="faint">{k === "serial" ? t("이어지는 이야기 (n화)", "Continuing story (Ep. n)") : t("호 단위 발행 (제n호)", "Issues (No. n)")}</span>
           </label>
         ))}
       </div>
@@ -185,7 +185,7 @@ function SeriesFields({ s }: { s?: DeskSeries }) {
       </div>
       <div className="field"><label htmlFor={`sb-${uid}`}>{t("소개 (웹진 서가에 표시)", "Blurb (shown on the shelf)")}</label><textarea id={`sb-${uid}`} name="blurb" className="textarea" style={{ minHeight: 70 }} maxLength={280} defaultValue={s?.blurb ?? ""} /></div>
       <details className="desk-en">
-        <summary className="mono dim">English (optional)</summary>
+        <summary className="mono dim">{t("영문 (선택)", "English (optional)")}</summary>
         <div className="stack" style={{ ["--gap" as string]: "10px", marginTop: 10 }}>
           <input name="title_en" className="input" maxLength={80} placeholder="English title" defaultValue={s?.title_en ?? ""} lang="en" aria-label="English title" />
           <textarea name="blurb_en" className="textarea" style={{ minHeight: 60 }} maxLength={280} placeholder="English blurb" defaultValue={s?.blurb_en ?? ""} lang="en" aria-label="English blurb" />

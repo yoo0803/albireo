@@ -259,9 +259,9 @@ export function AlbireoScope({ className }: { className?: string }) {
   }, []);
 
   const label = {
-    sky: [t("β CYG · 북 ↑ 동 ←", "β CYG · N ↑ E ←"), t(`A–B ${SEP}″ · 위치각 54° · 3.1 / 5.1등`, `A–B ${SEP}″ · PA 54° · mag 3.1 / 5.1`)],
-    depth: [t("시선 방향 깊이", "Depth along the line of sight"), t(`A ≈ ${DIST_A}광년 · B ≈ ${DIST_B}광년 (가이아)`, `A ≈ ${DIST_A} ly · B ≈ ${DIST_B} ly (Gaia)`)],
-    zoom: [t("A 확대 · 실제 쌍성", "A magnified · a true binary"), t(`Aa (K2 II) + Ac (B8) · 0.4″ · 주기 ≈ ${P_INNER}년`, `Aa (K2 II) + Ac (B8) · 0.4″ · P ≈ ${P_INNER} yr`)],
+    sky: [t("β CYG (북 ↑ 동 ←)", "β CYG (N ↑ E ←)"), t(`A–B ${SEP}″, 위치각 54°, 3.1/5.1등`, `A–B ${SEP}″, PA 54°, mag 3.1/5.1`)],
+    depth: [t("시선 방향 깊이", "Depth along the line of sight"), t(`A ≈ ${DIST_A}광년 / B ≈ ${DIST_B}광년 (가이아)`, `A ≈ ${DIST_A} ly / B ≈ ${DIST_B} ly (Gaia)`)],
+    zoom: [t("A 확대: 실제 쌍성", "A magnified: a true binary"), t(`Aa (K2 II) + Ac (B8) / 0.4″ / 주기 ≈ ${P_INNER}년`, `Aa (K2 II) + Ac (B8) / 0.4″ / P ≈ ${P_INNER} yr`)],
   }[hud];
 
   return (
@@ -271,7 +271,7 @@ export function AlbireoScope({ className }: { className?: string }) {
         <span>{label[0]}</span>
         <span>{label[1]}</span>
       </div>
-      <span className="scope-hint">{t("끌기: 깊이 보기 · 누르고 있기: A 확대", "Drag: see depth · Hold: magnify A")}</span>
+      <span className="scope-hint">{t("끌기: 깊이 보기 / 누르고 있기: A 확대", "Drag: see depth / Hold: magnify A")}</span>
     </div>
   );
 }

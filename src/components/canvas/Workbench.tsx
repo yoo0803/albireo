@@ -54,7 +54,7 @@ export function Workbench({ canvasId, initialTitle, initialDoc, userId, articles
         {canvasId && isOwner && (
           <button type="button" className={`wb-lock${locked ? " on" : ""}`} onClick={toggleLock} disabled={lockBusy} aria-pressed={locked}
             title={locked ? t("잠김: 나만 보고 고칠 수 있습니다. 누르면 멤버와 함께 씁니다.", "Locked: only you can see and edit. Click to share with members.") : t("함께 쓰는 중: 누르면 나만 보도록 잠급니다.", "Shared with members. Click to keep it to yourself.")}>
-            {locked ? "🔒" : "🔓"} {locked ? t("잠김 · 나만", "Private") : t("함께 쓰기", "Shared")}
+            {locked ? "🔒" : "🔓"} {locked ? t("잠김 (나만)", "Private") : t("함께 쓰기", "Shared")}
           </button>
         )}
         <span className="mono dim">{canvasId ? status : "local only"}</span>
@@ -93,7 +93,7 @@ function Charts({ doc, patch }: { doc: CanvasDoc; patch: (p: Partial<CanvasDoc>)
       <label className="panel panel-body" style={{ display: "grid", placeItems: "center", gap: 8, borderStyle: "dashed", cursor: "pointer", padding: 32 }}
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) onFile(f); }}>
-        <span className="mono">Drop CSV · or click</span>
+        <span className="mono">{t("CSV를 끌어 놓거나 눌러서 선택", "Drop a CSV or click")}</span>
         <input type="file" accept=".csv,text/csv" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) onFile(f); e.target.value = ""; }} />
       </label>
       {err && <p className="error-text">{err}</p>}

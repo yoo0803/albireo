@@ -674,12 +674,12 @@ export function Board({ value, onChange, canvasId, userId, articles = [] }: Prop
 
       {/* 비었을 때 */}
       {!board.items.length && !board.strokes.length && (
-        <p className="bd-empty"><span>{t("빈 곳을 두 번 눌러 카드 만들기", "Double-click to add a card")}</span><span>{t("P 펜 · L 연결 · Tab 가지 뻗기", "P pen · L link · Tab to branch")}</span></p>
+        <p className="bd-empty"><span>{t("빈 곳을 두 번 눌러 카드 만들기", "Double-click to add a card")}</span><span>{t("P 펜 / L 연결 / Tab 가지 뻗기", "P pen / L link / Tab to branch")}</span></p>
       )}
 
       {/* 왼쪽 도구 */}
       <div className="bd-tools" role="toolbar" aria-label={t("도구", "Tools")}>
-        {([["select", t("선택 (V)", "Select (V)"), "M5 3l12 7-5 1.5L9.5 17z"], ["hand", t("이동 (H · 스페이스)", "Pan (H · Space)"), "M8 13V6a1.5 1.5 0 013 0v5m0-6a1.5 1.5 0 013 0v6m0-4a1.5 1.5 0 013 0v6a6 6 0 01-6 6h-1a6 6 0 01-5-3l-2-4a1.5 1.5 0 012.5-1.5L8 15"],
+        {([["select", t("선택 (V)", "Select (V)"), "M5 3l12 7-5 1.5L9.5 17z"], ["hand", t("이동 (H / 스페이스)", "Pan (H / Space)"), "M8 13V6a1.5 1.5 0 013 0v5m0-6a1.5 1.5 0 013 0v6m0-4a1.5 1.5 0 013 0v6a6 6 0 01-6 6h-1a6 6 0 01-5-3l-2-4a1.5 1.5 0 012.5-1.5L8 15"],
           ["pen", t("펜 (P)", "Pen (P)"), "M4 16l2.5-.5L16 6l-2-2-9.5 9.5zM13 5l2 2"], ["eraser", t("지우개 (E)", "Eraser (E)"), "M4 13l7-7 5 5-5 5H7zM9 16h8"], ["link", t("연결 (L)", "Link (L)"), "M8 12a3 3 0 010-4l2-2a3 3 0 014 4l-1 1M12 8a3 3 0 010 4l-2 2a3 3 0 01-4-4l1-1"]] as [Tool, string, string][]).map(([k, label, d]) => (
           <button key={k} type="button" aria-pressed={tool === k} title={label} aria-label={label} onClick={() => setTool(k)}><svg viewBox="0 0 20 20"><path d={d} /></svg></button>
         ))}
@@ -740,7 +740,7 @@ export function Board({ value, onChange, canvasId, userId, articles = [] }: Prop
           {arrange && (
             <div className="bd-menu" role="menu">
               <button type="button" role="menuitem" onClick={runAuto}><b>{t("자동 정렬", "Auto arrange")}</b><span>{t("연결 묶음은 트리로, 나머지는 격자로", "Trees for linked cards, a grid for the rest")}</span></button>
-              <button type="button" role="menuitem" onClick={() => runCenter()}><b>{t("중앙 정렬", "Centre on")}</b><span>{t("고른 카드 · 핀을 가운데 두고 둘레에", "Arrange around the selected card or pin")}</span></button>
+              <button type="button" role="menuitem" onClick={() => runCenter()}><b>{t("중앙 정렬", "Centre on")}</b><span>{t("고른 카드 / 핀을 가운데 두고 둘레에", "Arrange around the selected card or pin")}</span></button>
               <button type="button" role="menuitem" onClick={runMindmap}><b>{t("마인드맵", "Mind map")}</b><span>{t("선택한 카드에서 가지 뻗기", "Branch from the selected card")}</span></button>
               <button type="button" role="menuitem" onClick={runTimetree}><b>{t("타임트리", "Time tree")}</b><span>{t("날짜 있는 사건을 시간순으로", "Lay dated milestones on a time axis")}</span></button>
             </div>
@@ -843,7 +843,7 @@ export function Board({ value, onChange, canvasId, userId, articles = [] }: Prop
         const s = screen({ x: trayPl.x, y: trayPl.y + trayPl.h });
         return (
           <div className="bd-tray" style={{ left: s.x, top: s.y + 10 }}>
-            <p className="bd-tray-k">{trayIt.text || t("폴더", "Folder")} · {kids.length}</p>
+            <p className="bd-tray-k">{trayIt.text || t("폴더", "Folder")} ({kids.length})</p>
             {kids.length ? kids.map((c) => (
               <button key={c.id} type="button" className={`bd-tray-card bd-t-${c.tone}`} onPointerDown={(e) => takeOut(e, c.id)} title={t("끌어서 꺼내기", "Drag out")}>
                 <i />{c.text || t(...SHAPE_NAME[c.shape])}
@@ -901,7 +901,7 @@ export function Board({ value, onChange, canvasId, userId, articles = [] }: Prop
       )}
 
       {onePl && one && tool === "select" && !drag && !editing && one.shape === "folder" && !tray && (
-        <span className="bd-hint" style={{ left: screen({ x: onePl.x, y: onePl.y }).x, top: screen({ x: onePl.x, y: onePl.y + onePl.h }).y + 8 }}>{t("눌러서 열기 · 카드를 끌어 넣기", "Click to open · drag cards in")}</span>
+        <span className="bd-hint" style={{ left: screen({ x: onePl.x, y: onePl.y }).x, top: screen({ x: onePl.x, y: onePl.y + onePl.h }).y + 8 }}>{t("눌러서 열기 / 카드를 끌어 넣기", "Click to open / drag cards in")}</span>
       )}
     </div>
   );

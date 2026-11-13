@@ -21,7 +21,7 @@ export default async function SeriesIndex() {
     <section className="section has-backdrop">
       <Backdrop seed="albireo-series" tone="albireo" />
       <div className="wrap">
-        <SectionHead no={t("연", "S")} en="Series" ko={t("연재 · 정기간행", "")} aside={<span className="label faint">{list.length} {t("묶음", list.length === 1 ? "series" : "series")}</span>} />
+        <SectionHead no={t("연", "S")} en="Series" ko={t("연재 / 정기간행", "")} aside={<span className="label faint">{list.length} {t("묶음", list.length === 1 ? "series" : "series")}</span>} />
         <SeriesShelf list={list} lang={lang} />
       </div>
     </section>

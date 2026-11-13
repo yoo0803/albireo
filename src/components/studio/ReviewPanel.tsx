@@ -49,13 +49,13 @@ export function ReviewPanel({ articleId, meId, required, people, initial, review
   const send = (verdict: ReviewVerdict) =>
     start(async () => {
       const r = await submitReview(articleId, verdict, checks, note);
-      setMsg(r.ok ? "Submitted" : r.error);
+      setMsg(r.ok ? t("제출됨", "Submitted") : r.error);
     });
 
   return (
     <div className="split">
       <div className="panel">
-        <div className="panel-head"><span className="mono">Guideline checklist</span></div>
+        <div className="panel-head"><span className="mono">{t("검수 기준 체크리스트", "Guideline checklist")}</span></div>
         <p className="panel-note">{t("승인 전 확인 6항목", "Six checks before approving")}</p>
         <div className="panel-body stack" style={{ ["--gap" as string]: "14px" }}>
           {REVIEW_CHECKLIST.map((c) => (
@@ -65,19 +65,19 @@ export function ReviewPanel({ articleId, meId, required, people, initial, review
             </label>
           ))}
           <div className="field">
-            <label htmlFor="note">Reviewer note</label>
+            <label htmlFor="note">{t("검수 의견", "Reviewer note")}</label>
             <textarea id="note" className="textarea" value={note} onChange={(e) => setNote(e.target.value)} />
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <button className="btn btn-gold" disabled={!allChecked || pending} onClick={() => send("approve")} title={allChecked ? "" : t("모든 항목 체크 필요", "Tick every item")}>Approve</button>
-            <button className="btn" disabled={pending} onClick={() => send("request_changes")}>Request changes</button>
+            <button className="btn btn-gold" disabled={!allChecked || pending} onClick={() => send("approve")} title={allChecked ? "" : t("모든 항목 체크 필요", "Tick every item")}>{t("승인", "Approve")}</button>
+            <button className="btn" disabled={pending} onClick={() => send("request_changes")}>{t("수정 요청", "Request changes")}</button>
           </div>
           {msg && <p className="mono dim">{msg}</p>}
         </div>
       </div>
 
       <aside className="panel">
-        <div className="panel-head"><span className="mono">Status</span><span className="mono dim">{approvals}/{required}</span></div>
+        <div className="panel-head"><span className="mono">{t("현황", "Status")}</span><span className="mono dim">{approvals}/{required}</span></div>
         <p className="panel-note">{t("멤버별 검수 현황", "Review status by member")}</p>
         <div className="panel-body stack" style={{ ["--gap" as string]: "16px", justifyItems: "start" }}>
           <PeerReviewStamp reviewed={reviewed || approvals >= required} count={approvals} required={required} />

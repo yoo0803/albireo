@@ -3,7 +3,7 @@ import { fnv1a } from "@/lib/text/hash";
 // 캔버스 배치: 분야별 섬 + 해바라기 나선 + 충돌 회피
 export type Item = { id: string; w: number; h: number };
 export type Placed = Item & { x: number; y: number };
-export type Group = { id: string; label?: Item; items: Item[] };
+export type Group = { id: string; label?: Item; items: Item[]; angle?: number }; // angle: 고정 방향 (라디안, 화면 기준)
 
 const GOLD = Math.PI * (3 - Math.sqrt(5));
 const PAD = 26;
@@ -38,10 +38,15 @@ export function cluster(hero: Item | null, groups: Group[], opts: { w: number; h
   const out: Placed[] = [];
   const cx = W / 2, cy = H / 2;
   if (hero) out.push({ ...hero, x: Math.round(cx - hero.w / 2), y: Math.round(cy - hero.h / 2) });
-  const n = groups.length;
-  const off = r() * Math.PI * 2;
-  groups.forEach((g, i) => {
-    const a = off + (i / Math.max(1, n)) * Math.PI * 2;
+  // 방향 고정 섬 먼저 · 나머지는 그 사이에 고르게
+  const fixed = groups.filter((g) => g.angle !== undefined);
+  const free = groups.filter((g) => g.angle === undefined);
+  const base = fixed[0]?.angle;
+  const off = base ?? r() * Math.PI * 2;
+  const n = free.length + (base === undefined ? 0 : 1);
+  const angleOf = (g: Group) => g.angle ?? off + ((free.indexOf(g) + (base === undefined ? 0 : 1)) / Math.max(1, n)) * Math.PI * 2;
+  [...fixed, ...free].forEach((g) => {
+    const a = angleOf(g);
     const gx = cx + Math.cos(a) * W * 0.3, gy = cy + Math.sin(a) * H * 0.3;
     if (g.label) out.push(spot(g.label, gx, gy, out, r, 20, W, H));
     for (const it of g.items) out.push(spot(it, gx, gy, out, r, 46, W, H));

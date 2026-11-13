@@ -27,7 +27,7 @@ export function BulkScope({ keys, actions, children }: { keys: Key[]; actions: M
     const r = await bulkItems(mode, items);
     dlg.current?.close();
     setSel(new Set());
-    setMsg(r.failed ? t(`${r.ok}개 처리 · ${r.failed}개는 권한이 없어 건너뛰었습니다.`, `${r.ok} done · ${r.failed} skipped (not yours)`) : t(`${r.ok}개 처리했습니다.`, `${r.ok} done.`));
+    setMsg(r.failed ? t(`${r.ok}개 처리했고, ${r.failed}개는 권한이 없어 건너뛰었습니다.`, `${r.ok} done, ${r.failed} skipped (not yours)`) : t(`${r.ok}개 처리했습니다.`, `${r.ok} done.`));
     setTimeout(() => setMsg(null), 3200);
     router.refresh();
   });

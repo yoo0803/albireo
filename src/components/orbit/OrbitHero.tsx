@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { RandomArticle } from "./RandomArticle";
 import { Cover } from "@/components/art/Cover";
 import { AsciiPiece } from "@/components/ascii/AsciiPiece";
 import { ScrambleText } from "@/components/glyph/ScrambleText";
@@ -11,7 +12,7 @@ import { LangToggle } from "@/components/layout/LangToggle";
 
 type Item = { slug: string; title: string; discipline: Discipline; author: string };
 type Crew = { handle: string; name: string; discipline: Discipline };
-type Props = { items: Item[]; crew: Crew[]; tags: string[]; embedded?: boolean }; // embedded: 캔버스 안 (끌기는 캔버스가 담당)
+type Props = { items: Item[]; crew: Crew[]; tags: string[]; embedded?: boolean; slugs?: string[] }; // embedded: 캔버스 안 (끌기는 캔버스가 담당)
 
 const TAU = Math.PI * 2;
 const BASE = 0.14; // rad/s
@@ -22,7 +23,7 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 // 이름 → 이니셜 (Yeji C. → YC · H → H)
 const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).join("").toUpperCase().slice(0, 2);
 
-export function OrbitHero({ items, crew, tags, embedded }: Props) {
+export function OrbitHero({ items, crew, tags, embedded, slugs }: Props) {
   const t = useT();
   const stage = useRef<HTMLDivElement>(null);
   const itemEls = useRef<(HTMLAnchorElement | null)[]>([]);
@@ -225,7 +226,7 @@ export function OrbitHero({ items, crew, tags, embedded }: Props) {
           >
             <Cover seed={a.slug} d={a.discipline} className="orbit-cover" label={a.title} />
             <span className="orbit-meta">
-              <span className="label">{String(i + 1).padStart(2, "0")} · {a.author}</span>
+              <span className="label">{String(i + 1).padStart(2, "0")} / {a.author}</span>
               <span className="orbit-name">{a.title}</span>
             </span>
           </Link>
@@ -243,6 +244,7 @@ export function OrbitHero({ items, crew, tags, embedded }: Props) {
         <div className="orbit-cta">
           <Link href="/articles" className="btn btn-gold">Webzine</Link>
           <Link href="/studio" className="btn">Studio</Link>
+          <RandomArticle slugs={slugs ?? items.map((a) => a.slug)} />
         </div>
       </div>
     </section>

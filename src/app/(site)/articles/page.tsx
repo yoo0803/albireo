@@ -31,7 +31,7 @@ export default async function Articles() {
           <section className="section has-backdrop">
             <Backdrop seed="albireo-series" tone="albireo" />
             <div className="wrap">
-              <SectionHead no={t("연", "S")} en="Series" ko={t("연재 · 정기간행", "")} aside={<Link href="/series" className="label faint">{t("서가 전체 →", "All series →")}</Link>} />
+              <SectionHead no={t("연", "S")} en="Series" ko={t("연재 / 정기간행", "")} aside={<Link href="/series" className="label faint">{t("서가 전체 →", "All series →")}</Link>} />
               <SeriesShelf list={series} lang={lang} />
             </div>
           </section>

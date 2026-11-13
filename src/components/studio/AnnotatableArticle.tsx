@@ -192,10 +192,10 @@ export function AnnotatableArticle({ articleId, body, me, people, initial }: Pro
 
       <aside className="panel" style={{ position: "sticky", top: 80, maxHeight: "calc(100dvh - 100px)", overflow: "auto" }}>
         <div className="panel-head">
-          <span className="mono">Annotations · {visible.length}</span>
+          <span className="mono">{t("주석", "Annotations")} ({visible.length})</span>
           <span className="mono" style={{ color: "var(--sage)" }} title={online.map((id) => people[id] ?? id).join(", ")}>● {online.length} live</span>
         </div>
-        <p className="panel-note">{t("문장 선택 후 주석 · 실시간 공유", "Select a sentence to annotate · live")}</p>
+        <p className="panel-note">{t("문장을 선택해 주석 (실시간 공유)", "Select a sentence to annotate (live)")}</p>
         <div className="panel-body stack" style={{ ["--gap" as string]: "18px" }}>
           <label className="mono dim" style={{ display: "flex", gap: 8, alignItems: "center" }}>
             <input type="checkbox" checked={showResolved} onChange={(e) => setShowResolved(e.target.checked)} /> Show resolved
@@ -232,6 +232,7 @@ function AnnotationItem(props: {
   onResolve: () => void;
 }) {
   const { a, active, author, replies, people } = props;
+  const t = useT();
   const [text, setText] = useState("");
   const color = COLORS.find((c) => c.c === a.color)?.v;
   return (
@@ -239,7 +240,7 @@ function AnnotationItem(props: {
       <button type="button" onClick={props.onFocus} className="serif" style={{ all: "unset", cursor: "pointer", display: "block", fontSize: "0.92rem" }}>
         “{a.quote}”
       </button>
-      <div className="mono faint" style={{ marginTop: 4 }}>{author} · {a.created_at.slice(5, 16).replace("T", " ")}</div>
+      <div className="mono faint" style={{ marginTop: 4 }}>{author} / {a.created_at.slice(5, 16).replace("T", " ")}</div>
       {replies.map((r) => (
         <p key={r.id} style={{ fontSize: "0.88rem", marginTop: 8 }}><span className="mono dim">{people[r.author_id] ?? "—"}</span> {r.body}</p>
       ))}
@@ -247,8 +248,8 @@ function AnnotationItem(props: {
         style={{ display: "flex", gap: 6, marginTop: 8 }}
         onSubmit={(e) => { e.preventDefault(); if (text.trim()) { props.onReply(text); setText(""); } }}
       >
-        <input className="input" style={{ height: 30, fontSize: 13 }} value={text} onChange={(e) => setText(e.target.value)} placeholder="Reply" />
-        <button className="btn btn-sm" type="button" onClick={props.onResolve}>{a.resolved ? "Reopen" : "Resolve"}</button>
+        <input className="input" style={{ height: 30, fontSize: 13 }} value={text} onChange={(e) => setText(e.target.value)} placeholder={t("답글", "Reply")} />
+        <button className="btn btn-sm" type="button" onClick={props.onResolve}>{a.resolved ? t("다시 열기", "Reopen") : t("해결", "Resolve")}</button>
       </form>
     </div>
   );

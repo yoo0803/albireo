@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { FIELDS, FIELD_MAX, isPreset } from "@/content/fields";
-import { useT } from "@/lib/i18n/client";
+import { useLang, useT } from "@/lib/i18n/client";
 
 const OTHER = "__other";
 
@@ -17,6 +17,7 @@ type Props = {
 // 분야 선택: 기본값 + 기타 직접 입력
 export function FieldPicker({ id, name, value, onChange, none, suffix = "" }: Props) {
   const t = useT();
+  const ko = useLang() === "ko";
   const [v, setV] = useState<string | null>(value);
   const [other, setOther] = useState(!!value && !isPreset(value));
   const update = (x: string | null) => { setV(x); onChange?.(x); };
@@ -35,7 +36,7 @@ export function FieldPicker({ id, name, value, onChange, none, suffix = "" }: Pr
         }}
       >
         {none !== undefined && <option value="">{none}</option>}
-        {FIELDS.map((f) => <option key={f.id} value={f.id}>{f.label}{suffix}</option>)}
+        {FIELDS.map((f) => <option key={f.id} value={f.id}>{ko ? f.ko : f.label}{suffix}</option>)}
         <option value={OTHER}>{t("기타", "Other")}</option>
       </select>
       {other && (

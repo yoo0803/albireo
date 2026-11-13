@@ -26,7 +26,7 @@ export function CoverPicker({ title, field, value, onChange, coverUrl, onUpload 
 
   const upload = async (f: File) => {
     setErr(null);
-    if (!/^image\/(png|jpeg|webp|avif|gif)$/.test(f.type) || f.size > MAX) return setErr(t("PNG · JPG · WEBP, 5MB 이하", "PNG · JPG · WEBP up to 5MB"));
+    if (!/^image\/(png|jpeg|webp|avif|gif)$/.test(f.type) || f.size > MAX) return setErr(t("PNG / JPG / WEBP, 5MB 이하", "PNG / JPG / WEBP up to 5MB"));
     setBusy(true);
     const ext = f.type.split("/")[1].replace("jpeg", "jpg");
     const sb = supabaseBrowser();

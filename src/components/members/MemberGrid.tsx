@@ -16,7 +16,7 @@ export function MemberGrid({ list, lang, t }: { list: MemberEntry[]; lang: Lang;
         return (
           <article key={m.handle} className="quad" data-d={m.discipline}>
             <div className="quad-text">
-              <span className="quad-no label">{String(i + 1).padStart(2, "0")} · {m.role}</span>
+              <span className="quad-no label">{String(i + 1).padStart(2, "0")} / {m.role}</span>
               <h2 className="quad-name">
                 <Link href={`/authors/${m.handle}`} className="quad-link">{p?.byline.name ?? m.name}</Link>
               </h2>
@@ -29,7 +29,7 @@ export function MemberGrid({ list, lang, t }: { list: MemberEntry[]; lang: Lang;
                 </ul>
               )}
               <span className="quad-stats label">
-                {p?.stats.articles ?? 0} {t("편", "articles")} · {t("검수", "reviews")} {p?.stats.reviews ?? 0}
+                {p?.stats.articles ?? 0} {t("편", "articles")} / {t("검수", "reviews")} {p?.stats.reviews ?? 0}
               </span>
             </div>
             <span className="quad-lens" aria-hidden="true">{isPiece(m.piece) && <LazyAscii piece={m.piece} label={`${m.name} · ${m.major}`} />}</span>

@@ -7,7 +7,7 @@ import { isAdmin } from "@/lib/env";
 // 연재 작업대: 시리즈 만들기 · 회차 관리
 export default async function StudioSeries() {
   const t = await getT();
-  const { sb, user, profile } = await getViewer();
+  const { sb, profile } = await getViewer();
   const [{ data: series }, { data: eps }, { data: people }] = await Promise.all([
     sb.from("series").select("*").order("updated_at", { ascending: false }),
     sb.from("articles").select("id, title, status, is_public, series_id, series_no, author_id").not("series_id", "is", null).is("deleted_at", null),
@@ -18,7 +18,7 @@ export default async function StudioSeries() {
   const list: DeskSeries[] = (series ?? []).map((s) => ({
     ...s,
     owner: s.created_by ? names.get(s.created_by) ?? "—" : "—",
-    mine: s.created_by === user?.id || admin,
+    mine: s.created_by === profile?.id || admin,
     episodes: (eps ?? [])
       .filter((e) => e.series_id === s.id)
       .sort((a, b) => (a.series_no ?? 9999) - (b.series_no ?? 9999))
@@ -27,7 +27,7 @@ export default async function StudioSeries() {
 
   return (
     <div className="stack" style={{ ["--gap" as string]: "24px" }}>
-      <StudioHead title="Series" note={t("연재 · 정기간행을 만들고 회차를 이어 붙입니다", "Start serials and periodicals, then line up their episodes")} />
+      <StudioHead title={t("연재", "Series")} note={t("연재와 정기간행을 만들고 회차를 이어 붙입니다", "Start serials and periodicals, then line up their episodes")} />
       <SeriesDesk list={list} />
     </div>
   );

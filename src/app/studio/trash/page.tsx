@@ -14,7 +14,7 @@ const KIND_LABEL: Record<TrashKind, string> = { articles: "Manuscript", canvases
 // 휴지통
 export default async function Trash() {
   const t = await getT();
-  const { sb, user } = await getViewer();
+  const { sb, profile } = await getViewer();
   // 30일 지난 항목 먼저 정리
   await purgeExpired().catch(() => {});
   const [{ data: arts }, { data: cans }, { data: tops }] = await Promise.all([
@@ -32,11 +32,11 @@ export default async function Trash() {
 
   return (
     <div className="stack" style={{ ["--gap" as string]: "24px" }}>
-      <StudioHead title="Trash" note={t("삭제한 원고 · 캔버스 · 토론 주제 보관 · 30일 뒤 자동 삭제", "Deleted items · removed for good after 30 days")} />
+      <StudioHead title={t("휴지통", "Trash")} note={t("삭제한 원고/캔버스/토론 주제 보관 (30일 뒤 자동 삭제)", "Deleted items (removed for good after 30 days)")} />
       <BulkScope keys={rows.map((r) => `${r.kind}:${r.id}` as const)} actions={["restore", "purge"]}>
       <div className="panel table-scroll">
         <table className="table">
-          <thead><tr><th className="bulk-col" /><th>Title</th><th>Type</th><th>Deleted</th><th>{t("자동 삭제", "Auto-delete")}</th><th /></tr></thead>
+          <thead><tr><th className="bulk-col" /><th>{t("제목", "Title")}</th><th>{t("종류", "Type")}</th><th>{t("삭제일", "Deleted")}</th><th>{t("자동 삭제", "Auto-delete")}</th><th /></tr></thead>
           <tbody>
             {rows.map((r) => {
               const left = Math.max(0, Math.ceil(30 - (now - Date.parse(r.deleted_at)) / 864e5));
@@ -49,7 +49,7 @@ export default async function Trash() {
                 <td className={`mono ${left <= 3 ? "trash-soon" : "faint"}`}>{t(`${left}일 뒤`, `in ${left}d`)}</td>
                 <td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
                   <ConfirmAction kind={r.kind} id={r.id} mode="restore" />
-                  {r.owner === user?.id && <ConfirmAction kind={r.kind} id={r.id} mode="purge" />}
+                  {r.owner === profile?.id && <ConfirmAction kind={r.kind} id={r.id} mode="purge" />}
                 </td>
               </tr>
               );

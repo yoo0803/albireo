@@ -52,10 +52,11 @@ export function CanvasHome({ articles, lang, t }: { articles: ArticleCard[]; lan
   });
   const pl = t("사람들", "People");
   nodes["l-people"] = <IslandLabel text={pl} />;
-  groups.push({ id: "people", label: labelBox("l-people", pl), items: people });
+  // 사람들: 항상 궤도 오른쪽 위
+  groups.push({ id: "people", label: labelBox("l-people", pl), items: people, angle: -Math.PI / 4 });
 
   // 별: 좌표 · 세로쓰기
-  nodes["w-coord"] = <WordTile variant="label" text="β Cygni · RA 19h30m43s · DEC +27°57′35″" />;
+  nodes["w-coord"] = <WordTile variant="label" text="β Cygni / RA 19h30m43s / DEC +27°57′35″" />;
   nodes["w-ko"] = <WordTile variant="ko" text={t("천상열차", "Star chart")} />;
   groups.push({ id: "sky", items: [{ id: "w-ko", w: 70, h: 230 }, { id: "w-coord", w: 300, h: 44 }] });
 
@@ -64,6 +65,7 @@ export function CanvasHome({ articles, lang, t }: { articles: ArticleCard[]; lan
       embedded
       items={articles.slice(0, 8).map((a) => ({ slug: a.slug, title: lang === "en" && a.title_en ? a.title_en : a.title, discipline: a.discipline, author: a.author.name }))}
       crew={TEAM.map((m) => ({ handle: m.handle, name: m.name, discipline: m.discipline }))}
+      slugs={articles.map((a) => a.slug)}
       tags={TAGS(t("천상열차", "Star chart"))}
     />
   );
@@ -84,7 +86,7 @@ export function CanvasHome({ articles, lang, t }: { articles: ArticleCard[]; lan
         nodes={nodes}
         overlay={
           <>
-            <CanvasBar slugs={articles.map((a) => a.slug)} extra={<ReactDock />} />
+            <CanvasBar slugs={articles.map((a) => a.slug)} extra={<ReactDock />} random={false} />
             <div className="canvas-hint" aria-hidden="true">
               <span>{t("끌어서 둘러보기", "Drag to explore")}</span>
             </div>

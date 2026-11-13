@@ -23,7 +23,7 @@ export function CoverTile({ a, lang, seed, tilt = 0 }: { a: ArticleCard; lang: "
       </span>
       <span className="tile-cap">
         <span className="tile-title">{title}</span>
-        <span className="tile-meta">{a.author.name}{a.peer_reviewed ? " · ◉ PR" : ""}</span>
+        <span className="tile-meta">{a.author.name}{a.peer_reviewed ? " (◉ PR)" : ""}</span>
       </span>
     </Link>
   );
