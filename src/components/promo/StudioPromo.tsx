@@ -236,7 +236,7 @@ function Review({ l, t }: SceneProps) {
       </div>
       <aside className="pr-side">
         <div className="pr-note" data-pt="note" style={{ opacity: card, transform: `translateX(${(1 - card) * 24}px)` }}>
-          <span className="pr-av">L</span>
+          <span className="pr-av">YL</span>
           <p>{typed(t("출처를 달아 주세요: Gaia DR3", "Please cite it: Gaia DR3"), l, 3.0, 3.9)}</p>
         </div>
         <ul className="pr-check">
@@ -254,8 +254,8 @@ function Review({ l, t }: SceneProps) {
 // 03 토론
 function Debate({ l, t }: SceneProps) {
   const posts = [
-    { who: "L", c: "gold", name: "L", at: 0.4, txt: t("가이아 DR3의 시차 오차가 꽤 커서, 거리 차이만으로 단정하긴 이른 것 같아요.", "Gaia DR3’s parallax error is large; distance alone isn’t conclusive.") },
-    { who: "S", c: "sage", name: "S", at: 1.4, txt: t("고유운동 방향이 다른 건 오차로 설명하기 어려워요. 그쪽이 더 강한 근거예요.", "Their proper motions differ, which errors can’t explain. That’s the stronger evidence.") },
+    { who: "YL", c: "gold", name: "Yeonwoo L.", at: 0.4, txt: t("가이아 DR3의 시차 오차가 꽤 커서, 거리 차이만으로 단정하긴 이른 것 같아요.", "Gaia DR3’s parallax error is large; distance alone isn’t conclusive.") },
+    { who: "H", c: "sage", name: "H", at: 1.4, txt: t("고유운동 방향이 다른 건 오차로 설명하기 어려워요. 그쪽이 더 강한 근거예요.", "Their proper motions differ, which errors can’t explain. That’s the stronger evidence.") },
   ];
   const reply = t("그럼 두 근거를 나눠 쓰고, 오차 범위는 표로 붙일게요.", "Then I’ll split the two arguments and add the error ranges as a table.");
   const sent = l > 4.65;
@@ -277,7 +277,7 @@ function Debate({ l, t }: SceneProps) {
         })}
         {sent && (
           <div className="pr-post d-blue mine" style={{ opacity: r, transform: `translateY(${(1 - r) * 14}px)` }}>
-            <span className="pr-av">Y</span>
+            <span className="pr-av">YC</span>
             <div><small>Yeji C. · {t("방금", "just now")}</small><p>{reply}</p></div>
             <span className={`pr-like${liked ? " on" : ""}`} data-pt="like"><RocketGlyph /> {liked ? 3 : 2}</span>
           </div>

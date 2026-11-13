@@ -30,11 +30,6 @@ export default async function Credits() {
 
         <div className="stack" style={{ ["--gap" as string]: "10px", marginTop: "clamp(36px, 6vw, 64px)" }}>
           <h2 className="label">{en ? "Generated with Claude Code" : "Claude Code로 만든 작업"}</h2>
-          <p className="dim" style={{ margin: 0, maxWidth: "46em" }}>
-            {en
-              ? "The pieces below were generated with Claude Code (Anthropic) through prompt engineering by Yeji C."
-              : "아래 작업물은 Yeji C.가 프롬프트 엔지니어링으로 Claude Code(Anthropic)를 이용해 생성했습니다."}
-          </p>
           <div className="table-scroll">
             <table className="table" style={{ minWidth: 680 }}>
               <thead><tr><th>{en ? "Work" : "작업"}</th><th>{en ? "Prompting" : "프롬프트"}</th><th>{en ? "Tool" : "도구"}</th><th>{en ? "What it is" : "설명"}</th></tr></thead>

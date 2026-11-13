@@ -1,10 +1,10 @@
-// SH · Chemistry: 흩어진 원자가 결합해 이니셜 분자 구조
+// HS · Chemistry (H): 흩어진 원자가 결합해 이니셜 분자 구조
 import { Grid, palette } from "ascii-magic-art/lib/kit.js";
 import { COLS, ROWS, layout, hash, cycle, ease, clamp01 } from "./font";
 
 export const meta = {
   slug: "initials-sh",
-  name: "SH · molecule",
+  name: "HS · molecule",
   cols: COLS,
   rows: ROWS,
   fps: 20,
@@ -19,7 +19,7 @@ type Atom = { x: number; y: number; sx: number; sy: number; stroke: number; big:
 
 export default function create() {
   const g = new Grid(COLS, ROWS);
-  const L = layout("SH");
+  const L = layout("HS");
 
   // 획마다 일정 간격 원자 배치
   const atoms: Atom[] = [];

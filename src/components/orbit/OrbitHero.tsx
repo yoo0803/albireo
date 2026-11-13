@@ -19,6 +19,9 @@ const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 // 궤도 히어로: 썸네일 공전 + 렌즈 차폐 + 드래그 관성
+// 이름 → 이니셜 (Yeji C. → YC · H → H)
+const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).join("").toUpperCase().slice(0, 2);
+
 export function OrbitHero({ items, crew, tags, embedded }: Props) {
   const t = useT();
   const stage = useRef<HTMLDivElement>(null);
@@ -202,7 +205,7 @@ export function OrbitHero({ items, crew, tags, embedded }: Props) {
 
         {crew.map((c, i) => (
           <Link key={c.handle} href={`/authors/${c.handle}`} ref={(n) => { crewEls.current[i] = n; }} className="orbit-crew" data-d={c.discipline} title={c.name}>
-            <span>{c.name.slice(0, 1)}</span>
+            <span>{initials(c.name)}</span>
           </Link>
         ))}
 

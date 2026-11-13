@@ -48,8 +48,6 @@ Albireo — designed & developed by **Yeji C.**
 
 ## Claude Code로 만든 작업
 
-아래 작업물은 **Yeji C.가 프롬프트 엔지니어링**으로 **Claude Code (Anthropic)** 를 이용해 생성했다.
-
 | 작업 | 파일 | 설명 |
 |---|---|---|
 | 멤버 프로필 애니메이션 | `src/components/ascii/initials/` | ascii-magic-art `Grid` · `palette` 키트로 만든 멤버 이니셜 ASCII 애니메이션 |
@@ -63,7 +61,7 @@ Albireo — designed & developed by **Yeji C.**
 | 항목 | 출처 |
 |---|---|
 | DOI 메타데이터 | doi.org 콘텐츠 협상 (Crossref · DataCite CSL-JSON) |
-| LY 이니셜 애니메이션 글자 | Homer, *The Iliad* 1권 첫머리, Samuel Butler 영역 (1898) · 퍼블릭 도메인 · [Project Gutenberg #2199](https://www.gutenberg.org/ebooks/2199) |
+| YL 이니셜 애니메이션 글자 | Homer, *The Iliad* 1권 첫머리, Samuel Butler 영역 (1898) · 퍼블릭 도메인 · [Project Gutenberg #2199](https://www.gutenberg.org/ebooks/2199) |
 | 알비레오 관측값 (소개 페이지 · 망원경 그림) | 각거리 · 위치각 · 등급 · 분광형 · Aa–Ac 궤도: [Wikipedia: Albireo](https://en.wikipedia.org/wiki/Albireo) 정리값 · 거리: ESA Gaia · A–B 관계: Drimmel et al. 2021, *MNRAS* 502, 328 |
 
 ## 알고리즘 · 개념

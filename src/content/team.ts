@@ -13,8 +13,8 @@ export type Member = {
 
 export const TEAM: Member[] = [
   { handle: "yeji", name: "Yeji C.", discipline: "cs", role: "Advanced Computing", major: "Advanced Computing", piece: "initials-yc", bio: "" },
-  { handle: "englit", name: "L", discipline: "englit", role: "English Literature", major: "English Literature", piece: "initials-ly", bio: "" },
-  { handle: "klit", name: "H", discipline: "klit", role: "Korean Literature · Business", major: "Korean Literature · Business", piece: "initials-hs", bio: "" },
-  { handle: "chem", name: "S", discipline: "chem", role: "Chemistry", major: "Chemistry", piece: "initials-sh", bio: "" },
+  { handle: "englit", name: "Yeonwoo L.", discipline: "englit", role: "English Literature", major: "English Literature", piece: "initials-ly", bio: "" },
+  { handle: "klit", name: "Seokhwa H.", discipline: "klit", role: "Korean Literature · Business", major: "Korean Literature · Business", piece: "initials-hs", bio: "" },
+  { handle: "chem", name: "H", discipline: "chem", role: "Chemistry", major: "Chemistry", piece: "initials-sh", bio: "" },
 ];
 

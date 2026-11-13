@@ -30,7 +30,7 @@ export const CREDITS = [
   { name: "Bodoni Moda", by: "Owen Earl (indestructible type*)", license: "SIL OFL 1.1", url: "https://fonts.google.com/specimen/Bodoni+Moda", use: "브랜드 강조 (reo)", useEn: "Brand accent (reo)" },
   { name: "천상열차분야지도", nameEn: "Cheonsang Yeolcha Bunyajido (star chart)", by: "조선 (1395)", byEn: "Joseon (1395)", license: "Public domain", url: "https://www.heritage.go.kr", use: "렌즈 링 문구 인용", useEn: "Lens ring inscription" },
   { name: "Albireo 관측값", nameEn: "Albireo measurements", by: "Wikipedia · ESA Gaia · Drimmel et al. 2021", license: "Data (cited)", url: "https://en.wikipedia.org/wiki/Albireo", use: "소개 페이지 · 망원경 그림의 각거리 · 등급 · 거리 · 궤도 값", useEn: "Separation, magnitudes, distances and orbit used on the About page and telescope view" },
-  { name: "The Iliad (Samuel Butler tr., 1898)", by: "Homer · Samuel Butler", license: "Public domain", url: "https://www.gutenberg.org/ebooks/2199", use: "LY 이니셜 애니메이션의 글자 (1권 첫머리)", useEn: "Letters in the LY initials animation (opening of Book I)" },
+  { name: "The Iliad (Samuel Butler tr., 1898)", by: "Homer · Samuel Butler", license: "Public domain", url: "https://www.gutenberg.org/ebooks/2199", use: "YL 이니셜 애니메이션의 글자 (1권 첫머리)", useEn: "Letters in the YL initials animation (opening of Book I)" },
 ] as const;
 
 // Claude Code로 만든 작업: 프롬프트 Yeji C.

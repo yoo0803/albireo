@@ -1,10 +1,10 @@
-// HS · Korean Literature + Business: 붓 획 위로 차트가 차오르고 낙관 · 아래는 고전 제목 글자 막대그래프
+// SH · Korean Literature + Business (Seokhwa H.): 붓 획 위로 차트가 차오르고 낙관 · 아래는 고전 제목 글자 막대그래프
 import { Grid, palette } from "ascii-magic-art/lib/kit.js";
 import { COLS, ROWS, layout, cells, hash, cycle } from "./font";
 
 export const meta = {
   slug: "initials-hs",
-  name: "HS · brush & chart",
+  name: "SH · brush & chart",
   cols: COLS,
   rows: ROWS,
   fps: 20,
@@ -17,7 +17,7 @@ const BARS = "▁▂▃▄▅▆▇█";
 
 export default function create() {
   const g = new Grid(COLS, ROWS);
-  const L = layout("HS");
+  const L = layout("SH");
   const pts = cells(L.mask);
   const seen = new Set<string>();
   const path = L.path.map(([x, y]) => [Math.round(x), Math.round(y)] as [number, number]).filter(([x, y]) => {
@@ -68,7 +68,7 @@ export default function create() {
       g.text(sx, sy, "▓▓", "4");
       g.text(sx, sy + 1, "▓▓", "4");
       const pct = (1.5 + hash(Math.floor(t / 1.5), 6) * 4).toFixed(1);
-      const label = `HS ▲ ${pct}%`;
+      const label = `SH ▲ ${pct}%`;
       g.text(Math.floor((COLS - label.length) / 2), 4, label, "6");
     }
     return g.frame();

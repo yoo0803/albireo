@@ -1,10 +1,10 @@
-// LY · English Literature: 펜이 일리아스 첫 구절(L)과 마지막 줄(Y)로 이니셜을 써 내려감 · 위쪽 양옆에 부바/키키 (소리와 모양)
+// YL · English Literature (Yeonwoo L.): 펜이 일리아스 첫 구절과 마지막 줄로 이니셜을 써 내려감 · 위쪽 양옆에 부바/키키 (소리와 모양)
 import { Grid, palette } from "ascii-magic-art/lib/kit.js";
 import { COLS, ROWS, layout, hash, cycle, blank } from "./font";
 
 export const meta = {
   slug: "initials-ly",
-  name: "LY · manuscript",
+  name: "YL · manuscript",
   cols: COLS,
   rows: ROWS,
   fps: 20,
@@ -59,7 +59,7 @@ function outline(g: G, cx: number, cy: number, R: number, f: (a: number) => numb
 export default function create() {
   const g = new Grid(COLS, ROWS);
   // 이니셜은 조금 작게 · 위로: 아래에 부바/키키 자리
-  const L = layout("LY", 3.3, 2.35, 6);
+  const L = layout("YL", 3.3, 2.35, 6);
   // 경로 순서 중복 제거
   const seen = new Set<string>();
   const path: [number, number][] = [];
@@ -68,7 +68,7 @@ export default function create() {
     if (!seen.has(k)) { seen.add(k); path.push([Math.round(x), Math.round(y)]); }
   }
 
-  // 글자별 순번: L 은 시작부터, Y 는 마지막 줄로
+  // 글자별 순번: 첫 글자(Y)는 첫머리, 둘째(L)는 마지막 줄로
   const midX = L.box.x0 + (L.box.x1 - L.box.x0) / 2;
   let nl = 0, ny = 0;
   const ink = path.map(([x]) => (x < midX ? { s: INK_L, i: nl++ } : { s: INK_Y, i: ny++ }));
