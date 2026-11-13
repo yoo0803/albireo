@@ -1,0 +1,43 @@
+// 서드파티 크레딧 (CREDITS.md 와 동기)
+export const CREDITS = [
+  { name: "ascii-magic-art", by: "ASCII Magic (kailashsr38)", license: "MIT", url: "https://github.com/kailashsr38/ascii-magic-art", use: "히어로 · 팀 섹션 ASCII 애니메이션 조각 및 플레이어 런타임, 메일 머리 그림(한 프레임 캡처)", useEn: "ASCII animation pieces and player runtime (hero, members); email header image (one captured frame)" },
+  { name: "Next.js", by: "Vercel", license: "MIT", url: "https://github.com/vercel/next.js", use: "App Router, SSR/ISR, next/og", useEn: "App Router, SSR/ISR, next/og" },
+  { name: "Supabase JS · SSR", by: "Supabase", license: "MIT", url: "https://github.com/supabase/supabase-js", use: "Auth, Postgres, Realtime, Storage 클라이언트", useEn: "Auth, Postgres, Realtime and Storage clients" },
+  { name: "Recharts", by: "Recharts Group", license: "MIT", url: "https://github.com/recharts/recharts", use: "CSV 자동 차트", useEn: "Automatic charts from CSV" },
+  { name: "perfect-freehand", by: "Steve Ruiz", license: "MIT", url: "https://github.com/steveruizok/perfect-freehand", use: "캔버스 펜 필기 획", useEn: "Pen strokes on the canvas" },
+  { name: "Tesseract.js", by: "Naptha", license: "Apache-2.0", url: "https://github.com/naptha/tesseract.js", use: "필기 → 글자 인식 (브라우저 내장 인식기가 없을 때)", useEn: "Handwriting to text (fallback when the browser has no recognizer)" },
+  { name: "Papa Parse", by: "Matt Holt", license: "MIT", url: "https://github.com/mholt/PapaParse", use: "CSV 파싱", useEn: "CSV parsing" },
+  { name: "Nodemailer", by: "Andris Reinman", license: "MIT-0", url: "https://github.com/nodemailer/nodemailer", use: "구독 메일 발송", useEn: "Subscription emails" },
+  { name: "Sentry Next.js SDK", by: "Sentry", license: "MIT", url: "https://github.com/getsentry/sentry-javascript", use: "에러 모니터링", useEn: "Error monitoring" },
+  { name: "Pretendard", by: "Kil Hyung-jin (orioncactus)", license: "SIL OFL 1.1", url: "https://github.com/orioncactus/pretendard", use: "본문", useEn: "Body text" },
+  { name: "Instrument Serif", by: "Instrument", license: "SIL OFL 1.1", url: "https://fonts.google.com/specimen/Instrument+Serif", use: "라틴 디스플레이", useEn: "Latin display" },
+  { name: "Diphylleia", by: "Google Fonts", license: "SIL OFL 1.1", url: "https://fonts.google.com/specimen/Diphylleia", use: "국문 디스플레이", useEn: "Korean display" },
+  { name: "Hahmlet", by: "Hypertype", license: "SIL OFL 1.1", url: "https://fonts.google.com/specimen/Hahmlet", use: "국문 제목", useEn: "Korean headings" },
+  { name: "Orbit", by: "Google Fonts", license: "SIL OFL 1.1", url: "https://fonts.google.com/specimen/Orbit", use: "국문 라벨", useEn: "Korean labels" },
+  { name: "JetBrains Mono", by: "JetBrains", license: "SIL OFL 1.1", url: "https://github.com/JetBrains/JetBrainsMono", use: "라벨 · 코드", useEn: "Labels · code" },
+  { name: "Noto Serif KR", by: "Google · Adobe", license: "SIL OFL 1.1", url: "https://fonts.google.com/noto/specimen/Noto+Serif+KR", use: "원고 본문 서체 선택 (Fontsource · jsDelivr)", useEn: "Selectable article body font (Fontsource · jsDelivr)" },
+  { name: "Noto Sans KR", by: "Google · Adobe", license: "SIL OFL 1.1", url: "https://fonts.google.com/noto/specimen/Noto+Sans+KR", use: "원고 본문 서체 선택 (Fontsource · jsDelivr)", useEn: "Selectable article body font (Fontsource · jsDelivr)" },
+  { name: "Nanum Myeongjo · Nanum Gothic", by: "Naver (Sandoll)", license: "SIL OFL 1.1", url: "https://hangeul.naver.com/font", use: "원고 본문 서체 선택 (Fontsource · jsDelivr)", useEn: "Selectable article body font (Fontsource · jsDelivr)" },
+  { name: "Gowun Batang · Gowun Dodum", by: "Yanghee Ryu", license: "SIL OFL 1.1", url: "https://fonts.google.com/specimen/Gowun+Batang", use: "원고 본문 서체 선택 (Fontsource · jsDelivr)", useEn: "Selectable article body font (Fontsource · jsDelivr)" },
+  { name: "IBM Plex Sans KR", by: "IBM", license: "SIL OFL 1.1", url: "https://github.com/IBM/plex", use: "원고 본문 서체 선택 (Fontsource · jsDelivr)", useEn: "Selectable article body font (Fontsource · jsDelivr)" },
+  { name: "Gothic A1", by: "HanYang I&C", license: "SIL OFL 1.1", url: "https://fonts.google.com/specimen/Gothic+A1", use: "원고 본문 서체 선택 (Fontsource · jsDelivr)", useEn: "Selectable article body font (Fontsource · jsDelivr)" },
+  { name: "Song Myung", by: "JIKJI SOFT", license: "SIL OFL 1.1", url: "https://fonts.google.com/specimen/Song+Myung", use: "소개 · 구독 완료 제목, 원고 본문 서체 선택 (Fontsource · jsDelivr)", useEn: "About and subscription headings; selectable article body font (Fontsource · jsDelivr)" },
+  { name: "EB Garamond", by: "Georg Duffner, Octavio Pardo", license: "SIL OFL 1.1", url: "https://fonts.google.com/specimen/EB+Garamond", use: "원고 본문 서체 선택 (Fontsource · jsDelivr)", useEn: "Selectable article body font (Fontsource · jsDelivr)" },
+  { name: "Source Serif 4", by: "Adobe", license: "SIL OFL 1.1", url: "https://github.com/adobe-fonts/source-serif", use: "원고 본문 서체 선택 (Fontsource · jsDelivr)", useEn: "Selectable article body font (Fontsource · jsDelivr)" },
+  { name: "Newsreader", by: "Production Type", license: "SIL OFL 1.1", url: "https://fonts.google.com/specimen/Newsreader", use: "원고 본문 서체 선택 (Fontsource · jsDelivr)", useEn: "Selectable article body font (Fontsource · jsDelivr)" },
+  { name: "Libre Baskerville", by: "Impallari Type", license: "SIL OFL 1.1", url: "https://fonts.google.com/specimen/Libre+Baskerville", use: "원고 본문 서체 선택 (Fontsource · jsDelivr)", useEn: "Selectable article body font (Fontsource · jsDelivr)" },
+  { name: "Inter", by: "Rasmus Andersson", license: "SIL OFL 1.1", url: "https://github.com/rsms/inter", use: "원고 본문 서체 선택 (Fontsource · jsDelivr)", useEn: "Selectable article body font (Fontsource · jsDelivr)" },
+  { name: "Bodoni Moda", by: "Owen Earl (indestructible type*)", license: "SIL OFL 1.1", url: "https://fonts.google.com/specimen/Bodoni+Moda", use: "브랜드 강조 (reo)", useEn: "Brand accent (reo)" },
+  { name: "천상열차분야지도", nameEn: "Cheonsang Yeolcha Bunyajido (star chart)", by: "조선 (1395)", byEn: "Joseon (1395)", license: "Public domain", url: "https://www.heritage.go.kr", use: "렌즈 링 문구 인용", useEn: "Lens ring inscription" },
+  { name: "Albireo 관측값", nameEn: "Albireo measurements", by: "Wikipedia · ESA Gaia · Drimmel et al. 2021", license: "Data (cited)", url: "https://en.wikipedia.org/wiki/Albireo", use: "소개 페이지 · 망원경 그림의 각거리 · 등급 · 거리 · 궤도 값", useEn: "Separation, magnitudes, distances and orbit used on the About page and telescope view" },
+  { name: "The Iliad (Samuel Butler tr., 1898)", by: "Homer · Samuel Butler", license: "Public domain", url: "https://www.gutenberg.org/ebooks/2199", use: "LY 이니셜 애니메이션의 글자 (1권 첫머리)", useEn: "Letters in the LY initials animation (opening of Book I)" },
+] as const;
+
+// Claude Code로 만든 작업: 프롬프트 Yeji C.
+export const GENERATED = [
+  { name: "멤버 프로필 애니메이션", nameEn: "Member profile animations", files: "src/components/ascii/initials/", use: "ascii-magic-art 키트로 만든 멤버 이니셜 ASCII 애니메이션", useEn: "Per-member initial ASCII animations (on the ascii-magic-art kit)" },
+  { name: "메인 화면 애니메이션", nameEn: "Home page animation", files: "src/components/orbit/OrbitHero.tsx", use: "첫 화면의 궤도 그림과 움직임", useEn: "Orbit hero motion" },
+  { name: "소개 · 구독 완료 애니메이션", nameEn: "About and subscription animation", files: "src/components/art/AlbireoScope.tsx", use: "망원경으로 알비레오를 들여다보는 점묘 그림", useEn: "Dithered, particle telescope view of Albireo" },
+  { name: "샘플 표지", nameEn: "Sample covers", files: "src/components/art/Cover.tsx · CoverArt.tsx", use: "글마다 자동으로 그려지는 표지 틀과 예시 표지", useEn: "Generative cover templates and demo covers" },
+  { name: "작업실 소개 영상", nameEn: "Studio preview video", files: "src/components/promo/StudioPromo.tsx", use: "로그인 화면에서 재생되는 작업실 기능 소개", useEn: "Studio feature motion on the sign-in page" },
+] as const;
