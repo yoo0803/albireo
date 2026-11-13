@@ -1132,6 +1132,8 @@ body:has(.canvas-stage) .site-footer { display: none; }
 .about-pair { position: absolute; right: 16px; top: 18px; display: flex; align-items: center; gap: 5px; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 .subscribe-end { margin-top: 72px; padding: 0 0 32px; }
+/* 구독 칸이 끝에 오면 아래 여백은 구독 칸 몫만 (멤버 페이지와 같은 간격) */
+:is(.section, .about):has(.subscribe-end) { padding-bottom: 0; }
 .scrapbook-sub { position: relative; max-width: 1100px; margin: 0 auto; padding: 18px var(--gutter) 40px calc(var(--gutter) + 50px); }
 .scrapbook-sub .subscribe { padding-top: 18px; border-top: 1px dashed var(--line-strong); }
 .sub-page { max-width: 640px; min-height: 40vh; align-content: center; }

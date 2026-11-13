@@ -1,3 +1,4 @@
+import { SubscribeForm } from "@/components/layout/SubscribeForm";
 import type { Metadata } from "next";
 import { SortedGrid } from "@/components/article/SortedGrid";
 import { SectionHead } from "@/components/home/SectionHead";
@@ -33,6 +34,7 @@ export default async function Articles() {
             <div className="wrap">
               <SectionHead no={t("연", "S")} en="Series" ko={t("연재 / 정기간행", "")} aside={<Link href="/series" className="label faint">{t("서가 전체 →", "All series →")}</Link>} />
               <SeriesShelf list={series} lang={lang} />
+              <div className="subscribe-end"><SubscribeForm id="sub-series-tab" /></div>
             </div>
           </section>
         ),
@@ -43,6 +45,7 @@ export default async function Articles() {
           <div className="wrap">
             <SectionHead no={t("웹", "W")} en="Webzine" ko={t("웹진", "")} aside={<span className="label faint">{list.length} {t("편", list.length === 1 ? "piece" : "pieces")}</span>} />
             <SortedGrid list={list} />
+            <div className="subscribe-end"><SubscribeForm id="sub-list" /></div>
           </div>
         </section>
       }

@@ -1,3 +1,4 @@
+import { SubscribeForm } from "@/components/layout/SubscribeForm";
 import type { Metadata } from "next";
 import { SectionHead } from "@/components/home/SectionHead";
 import { Backdrop } from "@/components/art/Backdrop";
@@ -23,6 +24,7 @@ export default async function SeriesIndex() {
       <div className="wrap">
         <SectionHead no={t("연", "S")} en="Series" ko={t("연재 / 정기간행", "")} aside={<span className="label faint">{list.length} {t("묶음", list.length === 1 ? "series" : "series")}</span>} />
         <SeriesShelf list={list} lang={lang} />
+        <div className="subscribe-end"><SubscribeForm id="sub-series" /></div>
       </div>
     </section>
   );
