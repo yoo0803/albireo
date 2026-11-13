@@ -36,7 +36,10 @@ export async function subscribe(_: SubState, form: FormData): Promise<SubState> 
   if (error) return { ok: false, msg: t("잠시 후 다시 시도해 주십시오.", "Please try again later.") };
   try {
     await sendConfirm(email, token, lang);
-  } catch {
+  } catch (e) {
+    // 원인 기록 (Cloudflare 로그에서 확인)
+    const err = e as { code?: string; responseCode?: number; message?: string };
+    console.error("subscribe mail", err.code, err.responseCode, err.message?.slice(0, 300));
     return { ok: false, msg: t("메일을 보내지 못했습니다. 잠시 후 다시 시도해 주십시오.", "Couldn’t send the email. Please try again later.") };
   }
   return sent;

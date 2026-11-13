@@ -1,6 +1,7 @@
 import "server-only";
 import nodemailer, { type Transporter } from "nodemailer";
 import { serverEnv } from "@/lib/env";
+import { onWorkers, smtpSend } from "@/lib/smtp-socket";
 import { absUrl } from "@/lib/seo";
 import { confirmMail, issueMail, joinApprovedMail, joinRequestMail, welcomeMail, type Issue, type JoinReq, type Lang } from "@/lib/mail-templates";
 
@@ -9,9 +10,25 @@ let cached: Transporter | null | undefined;
 export function mailer() {
   if (cached !== undefined) return cached;
   const e = serverEnv();
-  cached = e.smtpUser && e.smtpPass
-    ? nodemailer.createTransport({ host: e.smtpHost, port: e.smtpPort, secure: e.smtpPort === 465, auth: { user: e.smtpUser, pass: e.smtpPass } })
-    : null;
+  if (!e.smtpUser || !e.smtpPass) return (cached = null);
+  const smtp = { host: e.smtpHost, port: e.smtpPort, user: e.smtpUser, pass: e.smtpPass };
+  cached = onWorkers()
+    ? // Workers: 본문은 nodemailer 로 조립, 전송은 cloudflare:sockets
+      nodemailer.createTransport({
+        name: "cf-socket",
+        version: "1",
+        send(mail, done) {
+          const env = mail.message.getEnvelope();
+          mail.message.build((err, raw) => {
+            if (err) return done(err);
+            smtpSend(smtp, String(env.from), env.to, raw.toString("utf8")).then(
+              (response) => done(null, { envelope: env, messageId: mail.message.messageId(), response }),
+              (e: Error) => done(e),
+            );
+          });
+        },
+      })
+    : nodemailer.createTransport({ host: smtp.host, port: smtp.port, secure: smtp.port === 465, auth: { user: smtp.user, pass: smtp.pass } });
   return cached;
 }
 export const mailReady = () => !!mailer() && !!serverEnv().serviceKey;
